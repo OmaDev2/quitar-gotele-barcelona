@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
-const imagePath = 'public/images/home/aboutSection/image.jpg';
+const imagePath = 'public/images/blog/default.jpg';
 
 async function convert() {
     const fullPath = path.resolve(process.cwd(), imagePath);
