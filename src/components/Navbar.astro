@@ -28,6 +28,8 @@ const images = import.meta.glob(
 ) as Record<string, () => Promise<{ default: ImageMetadata }>>; // Type assertion moved to script
 
 const dynamicLogoSrc = logo && images[logoPath] ? images[logoPath] : null;
+const logoModule = dynamicLogoSrc ? await dynamicLogoSrc() : null;
+const resolvedLogo = logoModule?.default;
 ---
 
 <header
@@ -38,9 +40,9 @@ const dynamicLogoSrc = logo && images[logoPath] ? images[logoPath] : null;
         <div class="flex items-center justify-between h-24">
             <a href="/" class="flex items-center gap-2 shrink-0">
                 {
-                    dynamicLogoSrc ? (
+                    resolvedLogo ? (
                         <Image
-                            src={dynamicLogoSrc()}
+                            src={resolvedLogo}
                             alt={`${siteName} Logo`}
                             class="h-20 w-auto object-contain transition-all duration-300"
                             loading="eager"
