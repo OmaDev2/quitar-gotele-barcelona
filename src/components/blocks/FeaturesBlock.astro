@@ -1,0 +1,98 @@
+---
+import DynamicIcon from "../DynamicIcon.astro";
+import { spin } from "../../utils/spintax";
+interface FeatureItem {
+    title: string;
+    desc?: string;
+    description?: string;
+    icon: string;
+}
+
+interface Props {
+    locationName?: string;
+    city?: string;
+    title?: string;
+    subtitle?: string;
+    items?: FeatureItem[];
+    bgClass?: string;
+}
+
+const {
+    locationName: rawLocationName = "",
+    city: rawCity = "",
+    title: rawTitle = "",
+    subtitle: rawSubtitle = "",
+    items = [],
+    bgClass = "bg-secondary",
+} = Astro.props;
+
+const locationName = spin(rawLocationName);
+const city = spin(rawCity);
+
+const title = rawTitle
+    ? spin(rawTitle)
+    : `¿Por Qué Somos Tu Mejor Opción en ${locationName}?`;
+const subtitle = rawSubtitle
+    ? spin(rawSubtitle)
+    : `Conocemos perfectamente la zona de ${locationName} y sus necesidades específicas.`;
+
+const defaultItems: FeatureItem[] = [
+    {
+        title: "Cobertura Local",
+        desc: `Llegamos rápido a ${locationName}. Conocemos todas las calles y códigos postales.`,
+        icon: "MapPin",
+    },
+    {
+        title: "Respuesta Rápida",
+        desc: "Atendemos urgencias en menos de 4 horas. Servicio prioritario.",
+        icon: "Clock",
+    },
+    {
+        title: "Garantía Total",
+        desc: `Todos nuestros trabajos en ${locationName} incluyen garantía por escrito.`,
+        icon: "Shield",
+    },
+    {
+        title: "Profesionales",
+        desc: `Equipo certificado con más de 15 años de experiencia en ${city}.`,
+        icon: "Award",
+    },
+];
+
+const featuresToDisplay = items.length > 0 ? items : defaultItems;
+---
+
+<section class={`py-20 ${bgClass} border-t border-heading/5`}>
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-heading font-bold text-heading mb-4">
+                {title}
+            </h2>
+            <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+            <p class="text-body max-w-2xl mx-auto">
+                {subtitle}
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {
+                featuresToDisplay.map((item) => (
+                    <div class="bg-surface/50 p-6 rounded-xl border border-heading/10 hover:border-primary/50 transition-all group">
+                        <div class="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+                            <DynamicIcon
+                                name={item.icon}
+                                className="w-7 h-7 text-primary"
+                            />
+                        </div>
+                        <h3 class="text-xl font-bold text-heading mb-3">
+                            {spin(item.title)}
+                        </h3>
+                        <p class="text-body text-sm">
+                            {spin(item.desc || item.description || "")}
+                        </p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,133 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/Footer.astro";
+import { getCollection, getEntry } from "astro:content";
+import type { WithContext, LocalBusiness } from "schema-dts";
+
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import BlockRenderer from "../components/BlockRenderer.astro";
+
+// 1. Fetch Data
+const allServices = await getCollection("services");
+const featuredServices = allServices.filter((s) => s.data.featured === true);
+const testimonialsCollection = await getCollection("testimonials");
+const home = await getEntry("pages", "home");
+const homeData = (home?.data || {}) as any;
+
+// Prioritize testimonials from Home Singleton, fallback to Collection
+const rawTestimonials =
+	homeData.testimonials && homeData.testimonials.length > 0
+		? homeData.testimonials.map((t: any) => ({
+				name: t.author,
+				text: t.quote,
+				location: t.location,
+				initials: t.initials,
+				rating: 5, // Default rating for home singleton testimonials
+			}))
+		: testimonialsCollection.map((t) => ({
+				name: t.data.name,
+				text: t.data.text,
+				location: "", // Collection doesn't have location in schema currently?
+				initials: t.data.initials,
+				rating: t.data.rating,
+			}));
+
+const testimonials = rawTestimonials;
+
+// Render contenido SEO
+let SeoContentRendered;
+try {
+	const renderResult = home ? await home.render() : { Content: () => null };
+	SeoContentRendered = renderResult.Content;
+} catch (e) {
+	console.error("Error rendering home content:", e);
+	SeoContentRendered = () => null;
+}
+
+// 2. Global Settings
+import { getSettings } from "@/lib/settings";
+const config = await getSettings();
+
+// 3. Page Builder Logic
+const defaultBlocks = [
+	{ discriminant: "hero" },
+	{ discriminant: "services_grid" },
+	{ discriminant: "about" },
+	{ discriminant: "features" },
+	{ discriminant: "contact" },
+	{ discriminant: "testimonials" },
+	{ discriminant: "content" },
+	{ discriminant: "faq" },
+	{ discriminant: "locations" },
+	{ discriminant: "cta" },
+];
+
+const finalBlocks =
+	homeData.blocks && homeData.blocks.length > 0
+		? homeData.blocks
+		: defaultBlocks;
+
+// 4. Schema SEO
+import {
+	generateLocalBusinessSchema,
+	generateFAQSchema,
+	generateBreadcrumbsList,
+} from "@/lib/seo";
+
+const localBusinessSchema = generateLocalBusinessSchema(
+	{
+		siteName: config.siteName,
+		phone: config.phone,
+		city: config.city,
+		address: config.address,
+		coordinates: config.coordinates,
+		image: config.logo || `${config.siteUrl}/images/home/logo.png`,
+		businessType: config.businessType,
+		description: `${config.niche} en ${config.city}. Servicio profesional.`,
+		areaServed: config.areaServed, // Lista global de localidades
+		serviceRadius: config.serviceRadius, // Radio global
+		openingHours: config.openingHours,
+		paymentAccepted: config.paymentAccepted,
+		slogan: config.slogan,
+		knowsAbout: featuredServices.map((s) => s.data.title),
+	},
+	testimonialsCollection,
+	Astro.url.href,
+);
+
+const homepageFaqs =
+	homeData.faq ||
+	homeData.blocks?.find((b: any) => b.discriminant === "faq")?.value
+		?.questions ||
+	[];
+const faqSchema = generateFAQSchema(homepageFaqs);
+
+const breadcrumbsSchema = generateBreadcrumbsList([
+	{ name: "Inicio", item: Astro.site?.href || Astro.url.origin },
+]);
+
+const schema = [
+	localBusinessSchema,
+	breadcrumbsSchema,
+	...(faqSchema ? [faqSchema] : []),
+] as any;
+---
+
+<Layout
+	title={`${homeData.hero?.heading || config.niche + " en " + config.city} | ${config.siteName}`}
+	schema={schema}
+	stickyPhone={homeData.stickyPhone}
+	whatsappFloat={homeData.whatsappFloat}
+>
+	<BlockRenderer
+		blocks={finalBlocks}
+		isHome={true}
+		config={config}
+		city={config.city}
+		services={featuredServices}
+		allServices={allServices}
+		content={SeoContentRendered}
+	/>
+
+	<Footer />
+</Layout>

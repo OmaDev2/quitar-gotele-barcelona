@@ -1,0 +1,91 @@
+---
+import { Phone, ArrowRight } from "lucide-react";
+import { getEntry } from "astro:content";
+
+const business = await getEntry("business", "global");
+const businessData = (business?.data as any) || {};
+const phone = businessData.phone || "600 000 000";
+const niche = businessData.niche || "Profesional";
+const defaultCtaText = businessData.ctaText || "PEDIR PRESUPUESTO";
+
+const {
+    bgClass,
+    title: rawTitle,
+    subtitle: rawSubtitle,
+    buttonText: rawButtonText,
+    buttonLink,
+} = Astro.props;
+
+const title = rawTitle || "¿Tienes un proyecto en mente?";
+const subtitle =
+    rawSubtitle ||
+    "No te quedes con dudas. Nuestros técnicos te asesoran gratis y te dan precio cerrado hoy mismo.";
+const ctaText = rawButtonText || defaultCtaText;
+const link = buttonLink || `tel:${(phone || "").replace(/\s/g, "")}`;
+---
+
+<section
+    class="relative py-24 bg-gradient-to-br from-primary via-primary/90 to-accent overflow-hidden"
+>
+    {/* Fondo con Patrón */}
+    <div
+        class="absolute inset-0 bg-[url('/bg-pattern.svg')] opacity-5 pointer-events-none"
+    >
+    </div>
+
+    {/* Elementos Decorativos de Cristal */}
+    <div
+        class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+    <div
+        class="absolute bottom-0 left-0 -mb-20 -ml-20 w-72 h-72 bg-black/10 rounded-full blur-3xl pointer-events-none"
+    >
+    </div>
+
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <h2
+            class="text-4xl md:text-6xl font-heading font-black mb-6 tracking-tight drop-shadow-2xl text-white"
+        >
+            {title}
+        </h2>
+
+        <p
+            class="text-xl md:text-2xl mb-12 text-white/90 max-w-3xl mx-auto font-light leading-relaxed"
+        >
+            {subtitle}
+        </p>
+
+        <div
+            class="flex flex-col sm:flex-row gap-6 justify-center items-center"
+        >
+            <a
+                href={`tel:${phone.replace(/\s/g, "")}`}
+                class="group relative inline-flex items-center justify-center px-10 py-5 text-xl font-bold bg-white text-primary rounded-2xl transition-all hover:scale-105 shadow-2xl hover:shadow-white/20 overflow-hidden w-full sm:w-auto"
+            >
+                <div
+                    class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:animate-shine-fast"
+                >
+                </div>
+                <Phone className="w-6 h-6 mr-3 group-hover:animate-pulse" />
+                <span>Llamar Ahora</span>
+            </a>
+
+            <a
+                href="/contacto"
+                class="group relative inline-flex items-center justify-center px-10 py-5 text-xl font-bold bg-primary/20 backdrop-blur-md text-white border-2 border-white/30 rounded-2xl transition-all hover:scale-105 hover:bg-white/10 w-full sm:w-auto"
+            >
+                <ArrowRight
+                    className="w-6 h-6 mr-3 group-hover:translate-x-1 transition-transform"
+                />
+                <span>Pedir Presupuesto</span>
+            </a>
+        </div>
+
+        <p
+            class="mt-14 text-sm text-white/50 tracking-[0.2em] uppercase font-bold"
+        >
+            ⚡ Respuesta inmediata · Presupuesto gratuito · Sin compromiso
+        </p>
+    </div>
+</section>

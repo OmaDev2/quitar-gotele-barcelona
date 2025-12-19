@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+
+const locations = await getCollection("locations");
+
+// Ordenar alfabéticamente
+const sortedLocations = locations.sort((a, b) =>
+    a.data.name.localeCompare(b.data.name),
+);
+
+// Agrupar por categorías para mostrarlo ordenado (Opcional, si prefieres lista plana elimina esto)
+const categories = {
+    residencial: sortedLocations.filter((l) => l.data.type === "residencial"),
+    industrial: sortedLocations.filter((l) => l.data.type === "industrial"),
+    centro: sortedLocations.filter((l) => l.data.type === "centro"),
+};
+---
+
+<div class="space-y-6">
+    {/* Título de la sección en el Footer */}
+    <div class="text-heading font-bold uppercase tracking-wider text-sm mb-4">
+        Zonas de Servicio
+    </div>
+
+    {/* Si hay muchas zonas, usamos un Grid denso */}
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2">
+        {
+            sortedLocations.map((location) => (
+                <a
+                    href={`/zona/${location.slug}/`}
+                    class="group flex items-center gap-1 text-sm text-body hover:text-heading transition-colors"
+                >
+                    {/* Bullet point que cambia de color con el tema */}
+                    <span class="w-1.5 h-1.5 rounded-full bg-body/50 group-hover:bg-primary transition-colors" />
+                    <span class="group-hover:translate-x-1 transition-transform duration-300">
+                        {location.data.name}
+                    </span>
+                </a>
+            ))
+        }
+    </div>
+
+    {/* Enlace "Ver todas" dinámico */}
+    <div class="pt-4 border-t border-heading/10">
+        <a
+            href="/zonas"
+            class="inline-flex items-center text-sm font-bold text-primary hover:text-accent transition-colors"
+        >
+            Ver cobertura completa en el mapa →
+        </a>
+    </div>
+</div>

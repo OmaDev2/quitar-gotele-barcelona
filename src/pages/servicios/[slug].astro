@@ -1,0 +1,142 @@
+---
+import ServiceLayout from "../../layouts/ServiceLayout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { getSettings } from "@/lib/settings";
+import type { WithContext, Service, FAQPage, BreadcrumbList } from "schema-dts";
+
+// Importar componentes MDX
+import CtaBlock from "../../components/mdx/CtaBlock.astro";
+import AlertBlock from "../../components/mdx/AlertBlock.astro";
+import PhoneBlock from "../../components/mdx/PhoneBlock.astro";
+import BusinessNameBlock from "../../components/mdx/BusinessNameBlock.astro";
+import CustomImageBlock from "../../components/mdx/CustomImageBlock.astro";
+
+export const prerender = true;
+
+// 1. Generar rutas estáticas para cada servicio
+export async function getStaticPaths() {
+    const services = await getCollection("services");
+    return services.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+// 2. Obtener datos del servicio actual
+interface Props {
+    entry: CollectionEntry<"services">;
+}
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const data = entry.data;
+
+// Componentes disponibles en MDX
+const mdxComponents = {
+    CtaBlock,
+    AlertBlock,
+    PhoneBlock,
+    BusinessNameBlock,
+    CustomImageBlock,
+};
+
+// 3. Obtener configuración global
+const settings = await getSettings();
+
+// 4. Fetch para Sidebar y Navegación
+const allServices = await getCollection("services");
+const allLocations = await getCollection("locations");
+const testimonials = await getCollection(
+    "testimonials",
+    ({ data }) => data.featured === true,
+);
+
+// 5. Schema SEO
+import {
+    getAggregateRating,
+    generateBreadcrumbsList,
+    generateFAQSchema,
+    formatAreaServed,
+    generateLocalBusinessSchema,
+} from "@/lib/seo";
+
+const aggregateRating = getAggregateRating(testimonials);
+
+const serviceSchema: WithContext<Service> = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: data.title,
+    description: data.seoDesc,
+    provider: generateLocalBusinessSchema(
+        {
+            siteName: settings.siteName,
+            phone: settings.phone,
+            city: settings.city,
+            address: settings.address,
+            coordinates: settings.coordinates,
+            image: data.heroImage,
+            businessType: settings.businessType,
+            openingHours: settings.openingHours,
+            paymentAccepted: settings.paymentAccepted,
+            slogan: settings.slogan,
+            knowsAbout: [data.title],
+        },
+        testimonials,
+        Astro.url.href,
+    ) as any,
+    areaServed: formatAreaServed(
+        settings.areaServed,
+        settings.serviceRadius,
+        settings.coordinates,
+    ) || {
+        "@type": "City",
+        name: settings.city,
+    },
+    ...(aggregateRating && { aggregateRating }), // También a nivel de servicio
+};
+
+const breadcrumbsPoints = [
+    { name: "Inicio", item: Astro.site?.href || "https://example.com" },
+    { name: "Servicios", item: new URL("/#servicios", Astro.site).href },
+    { name: data.title, item: Astro.url.href },
+];
+
+const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
+
+const faqSchema = generateFAQSchema(data.faq || []);
+
+const schema = [
+    serviceSchema,
+    breadcrumbsSchema,
+    ...(faqSchema ? [faqSchema] : []),
+] as any;
+
+// 6. SEO: Título y descripción
+const pageTitle =
+    data.seoTitle || `${data.title} en ${settings.city} | ${settings.siteName}`;
+const pageDescription = data.seoDesc || data.shortDesc;
+---
+
+<ServiceLayout
+    title={data.title}
+    shortDesc={data.shortDesc}
+    icon={data.icon}
+    heroImage={data.heroImage}
+    faq={data.faq}
+    content={Content}
+    slug={entry.slug}
+    siteName={settings.siteName}
+    phone={settings.phone}
+    whatsapp={settings.whatsapp}
+    city={settings.city}
+    niche={settings.niche}
+    address={settings.address}
+    coordinates={settings.coordinates}
+    allServices={allServices}
+    allLocations={allLocations}
+    testimonials={testimonials}
+    pageTitle={pageTitle}
+    pageDescription={pageDescription}
+    schema={schema}
+    mdxComponents={mdxComponents}
+    blocks={data.blocks}
+/>

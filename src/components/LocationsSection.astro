@@ -1,0 +1,88 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import { MapPin, ArrowRight } from "lucide-react";
+
+const locations = await getCollection("locations");
+const business = await getEntry("business", "global");
+const { city } = business?.data || { city: "Zaragoza" };
+
+// Zonas destacadas por defecto si no hay locations
+const staticZones = [
+    `${city} Capital`,
+    "Área Metropolitana",
+    "Polígonos Industriales",
+];
+
+const { bgClass = "bg-secondary", locationsSection } = Astro.props;
+const cardBgClass =
+    bgClass === "bg-secondary" ? "bg-surface/50" : "bg-secondary/50";
+---
+
+<section id="zonas" class={`py-20 ${bgClass} border-t border-heading/10`}>
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-heading font-bold text-heading mb-4">
+                {locationsSection?.title || "Zonas de Servicio"}
+            </h2>
+            <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+            <p class="text-body max-w-2xl mx-auto">
+                {
+                    locationsSection?.subtitle ||
+                        `Nos desplazamos por toda la provincia de ${city}. Llegamos donde nos necesites con nuestro taller móvil.`
+                }
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {
+                locations.map((loc) => (
+                    <a
+                        href={`/zona/${loc.slug}`}
+                        class={`group flex items-center p-4 ${cardBgClass} rounded-lg border border-heading/10 hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20`}
+                    >
+                        <div class="p-3 bg-surface rounded-full text-primary mr-4 group-hover:bg-primary group-hover:text-white transition-colors">
+                            <MapPin className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-heading group-hover:text-primary transition-colors">
+                                {loc.data.name}
+                            </h3>
+                            <span class="text-xs text-body/70 uppercase tracking-wider">
+                                Ver Servicios
+                            </span>
+                        </div>
+                        <ArrowRight className="w-5 h-5 text-body/50 ml-auto group-hover:text-primary transition-colors" />
+                    </a>
+                ))
+            }
+
+            {/* Static Zones Display (Visualmente más sutiles) */}
+            {
+                staticZones.map((zone) => (
+                    <div class="group flex items-center p-4 bg-surface/30 rounded-lg border border-heading/10 hover:border-body/30 transition-all">
+                        <div class="p-3 bg-surface/50 rounded-full text-body/50 mr-4">
+                            <MapPin className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-body">{zone}</h3>
+                            <span class="text-xs text-body/50 uppercase tracking-wider">
+                                Servicio Disponible
+                            </span>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+
+        <div class="mt-12 text-center">
+            <p class="text-body/70 text-sm">
+                ¿No ves tu localidad?
+                <a
+                    href="/contacto"
+                    class="text-primary hover:text-accent hover:underline font-bold"
+                    >Contáctanos</a
+                >, seguramente llegamos.
+            </p>
+        </div>
+    </div>
+</section>

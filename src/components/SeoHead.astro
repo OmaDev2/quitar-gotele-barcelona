@@ -1,0 +1,53 @@
+---
+import { SEO } from "astro-seo";
+import type { WithContext, Thing } from "schema-dts";
+import { getSettings } from "../lib/settings";
+
+const settings = await getSettings();
+const siteName = settings.siteName || "Herrero Zaragoza";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  schema?: WithContext<Thing> | WithContext<Thing>[];
+  noindex?: boolean;
+}
+
+const { title, description, image, schema, noindex = false } = Astro.props;
+
+// Generate canonical URL
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+
+// Derivar imagen de OG dinámica basada en el nicho si no hay imagen específica
+const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g, "-") || "default"}.png`;
+---
+
+<SEO
+  title={title}
+  description={description}
+  canonical={canonicalURL}
+  openGraph={{
+    basic: {
+      title,
+      type: "website",
+      image: image || defaultOgImage,
+      url: canonicalURL,
+    },
+    optional: {
+      locale: "es_ES",
+      siteName: siteName,
+    },
+  }}
+  twitter={{
+    card: "summary_large_image",
+  }}
+  noindex={noindex}
+  nofollow={noindex}
+/>
+
+{
+  schema && (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  )
+}

@@ -1,0 +1,99 @@
+---
+import { Check } from "lucide-react";
+import { marked } from "marked";
+
+interface PricingPlan {
+    title?: string;
+    name?: string;
+    price: string;
+    priceUnit?: string;
+    description: string;
+    features: string[];
+    isPopular?: boolean;
+    buttonText?: string;
+    buttonLink?: string;
+    examples?: {
+        title?: string;
+        name?: string;
+        price: string;
+    }[];
+}
+
+interface Props {
+    title?: string;
+    subtitle?: string;
+    note?: string;
+    plans: PricingPlan[];
+    bgClass?: string;
+}
+
+const {
+    title = "Nuestros Precios",
+    subtitle = "Soluciones transparentes adaptadas a tus necesidades.",
+    note,
+    plans = [],
+    bgClass = "bg-secondary",
+} = Astro.props;
+---
+
+<section class={`py-24 ${bgClass} overflow-hidden`}>
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2
+                class="text-4xl md:text-5xl font-heading font-bold text-heading mb-6 tracking-tight"
+            >
+                {title}
+            </h2>
+            <p class="text-xl text-body font-light">
+                {subtitle}
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {
+                plans.map((plan) => (
+                    <div class="relative p-8 md:p-10 rounded-3xl bg-surface border border-heading/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full group">
+                        <div class="mb-6 flex-grow">
+                            <h3 class="text-2xl md:text-3xl font-heading font-bold text-heading mb-4 leading-tight group-hover:text-primary transition-colors">
+                                {plan.title}
+                            </h3>
+                            <p class="text-body text-lg leading-relaxed">
+                                {plan.description}
+                            </p>
+                        </div>
+
+                        {/* Precio destacado abajo */}
+                        <div class="pt-6 border-t border-heading/10">
+                            <p class="text-sm font-bold uppercase tracking-widest text-primary mb-2">
+                                Estimación
+                            </p>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl md:text-4xl font-bold text-heading">
+                                    {plan.price}
+                                </span>
+                                {plan.priceUnit && (
+                                    <span class="text-body/60 font-medium">
+                                        {plan.priceUnit}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+
+        {
+            note && (
+                <div class="max-w-4xl mx-auto mt-12 text-center">
+                    <div class="bg-surface-variant/50 p-6 rounded-2xl border border-heading/5">
+                        <p
+                            class="text-body/80 text-sm md:text-base leading-relaxed"
+                            set:html={marked.parse(note)}
+                        />
+                    </div>
+                </div>
+            )
+        }
+    </div>
+</section>

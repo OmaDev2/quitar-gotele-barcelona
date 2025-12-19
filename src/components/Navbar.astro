@@ -1,0 +1,285 @@
+---
+import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Image } from "astro:assets";
+import { getCollection, getEntry } from "astro:content";
+import { getSettings } from "@/lib/settings";
+
+// 1. Recuperamos datos del CMS
+const settings = await getSettings();
+const { siteName, phone, ctaText, logo } = settings;
+
+// 2. Recuperamos Configuración del Menú
+const navConfig = await getEntry("navigation", "main");
+const menuItems = navConfig?.data?.menuItems || [
+    { label: "Inicio", url: "/", type: "link" },
+    { label: "Servicios", type: "services_dropdown" },
+    { label: "Zonas", type: "locations_dropdown" },
+    { label: "Contacto", url: "/contacto/", type: "link" },
+];
+
+// 3. Recuperamos listas para los desplegables
+const services = await getCollection("services");
+const locations = await getCollection("locations");
+
+// 4. Lógica de Logo
+const logoPath = logo?.replace("@assets", "/src/assets");
+const images = import.meta.glob(
+    "/src/assets/images/**/*.{jpeg,jpg,png,gif,webp,svg}",
+) as Record<string, () => Promise<{ default: ImageMetadata }>>; // Type assertion moved to script
+
+const dynamicLogoSrc = logo && images[logoPath] ? images[logoPath] : null;
+---
+
+<header
+    id="navbar"
+    class="fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent"
+>
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-24">
+            <a href="/" class="flex items-center gap-2 shrink-0">
+                {
+                    dynamicLogoSrc ? (
+                        <Image
+                            src={dynamicLogoSrc()}
+                            alt={`${siteName} Logo`}
+                            class="h-20 w-auto object-contain transition-all duration-300"
+                            loading="eager"
+                            width={160}
+                            height={80}
+                        />
+                    ) : logo ? (
+                        <img
+                            src={logo}
+                            alt={`${siteName} Logo`}
+                            class="h-20 w-auto object-contain transition-all duration-300"
+                            height="80"
+                            fetchpriority="high"
+                        />
+                    ) : (
+                        <span class="text-2xl font-heading font-bold text-primary">
+                            {siteName}
+                        </span>
+                    )
+                }
+            </a>
+
+            <nav
+                class="hidden md:flex items-center justify-center flex-1 gap-8 px-8"
+            >
+                {
+                    menuItems.map((item) => {
+                        // CASO 1: ENLACE SIMPLE
+                        if (item.type === "link") {
+                            return (
+                                <a
+                                    href={item.url}
+                                    class="text-sm font-medium text-heading hover:text-primary transition-colors uppercase tracking-wide whitespace-nowrap"
+                                >
+                                    {item.label}
+                                </a>
+                            );
+                        }
+
+                        // CASO 2: DESPLEGABLE SERVICIOS
+                        if (
+                            item.type === "services_dropdown" &&
+                            services.length > 0
+                        ) {
+                            return (
+                                <div class="relative group">
+                                    <button class="text-sm font-medium text-heading hover:text-primary transition-colors uppercase tracking-wide flex items-center gap-1 py-4">
+                                        {item.label}
+                                        <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                                    </button>
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-secondary border border-heading/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden transform translate-y-2 group-hover:translate-y-0 text-left">
+                                        {services.map((service) => (
+                                            <a
+                                                href={`/servicios/${service.slug}/`}
+                                                class="block px-4 py-3 text-sm text-body hover:bg-primary/10 hover:text-primary transition-colors border-b border-heading/5 last:border-0"
+                                            >
+                                                {service.data.title}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        // CASO 3: DESPLEGABLE ZONAS
+                        if (
+                            item.type === "locations_dropdown" &&
+                            locations.length > 0
+                        ) {
+                            return (
+                                <div class="relative group">
+                                    <button class="text-sm font-medium text-heading hover:text-primary transition-colors uppercase tracking-wide flex items-center gap-1 py-4">
+                                        {item.label}
+                                        <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                                    </button>
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-secondary border border-heading/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden transform translate-y-2 group-hover:translate-y-0 text-left">
+                                        {locations
+                                            .slice(0, 6)
+                                            .map((location) => (
+                                                <a
+                                                    href={`/zona/${location.slug}/`}
+                                                    class="block px-4 py-3 text-sm text-body hover:bg-primary/10 hover:text-primary transition-colors border-b border-heading/5"
+                                                >
+                                                    {location.data.name}
+                                                </a>
+                                            ))}
+                                        <a
+                                            href="/zonas/"
+                                            class="block px-4 py-3 text-sm text-primary font-bold hover:bg-primary/10 transition-colors bg-surface/30"
+                                        >
+                                            Ver todas las zonas →
+                                        </a>
+                                    </div>
+                                </div>
+                            );
+                        }
+                    })
+                }
+            </nav>
+
+            <div class="flex items-center gap-4 shrink-0">
+                <a
+                    href={`tel:${(phone || "").replace(/\s/g, "")}`}
+                    class="hidden md:flex items-center gap-2 bg-primary hover:bg-accent text-white px-5 py-2.5 rounded font-bold transition-all shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 whitespace-nowrap"
+                >
+                    <Phone className="w-4 h-4" />
+                    <span>{phone}</span>
+                </a>
+
+                <button
+                    id="menu-toggle"
+                    class="md:hidden text-heading hover:text-primary transition-colors p-2"
+                    aria-label="Abrir menú"
+                >
+                    <Menu className="w-8 h-8" />
+                </button>
+            </div>
+        </div>
+
+        <div
+            id="mobile-menu"
+            class="fixed inset-0 bg-secondary/98 backdrop-blur-xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+        >
+            <div class="flex justify-end p-6">
+                <button
+                    id="menu-close"
+                    class="text-heading hover:text-primary p-2"
+                    aria-label="Cerrar menú"
+                >
+                    <X className="w-8 h-8" />
+                </button>
+            </div>
+
+            <div
+                class="flex-1 flex flex-col justify-center items-center gap-6 p-8 overflow-y-auto"
+            >
+                {
+                    menuItems.map((item) => {
+                        if (item.type === "link") {
+                            return (
+                                <a
+                                    href={item.url}
+                                    class="text-2xl font-heading font-bold text-heading hover:text-primary mobile-link"
+                                >
+                                    {item.label}
+                                </a>
+                            );
+                        }
+
+                        if (item.type === "services_dropdown") {
+                            return (
+                                <div class="w-full text-center space-y-3">
+                                    <p class="text-primary font-bold text-sm tracking-widest uppercase border-b border-heading/10 pb-2 mb-2 w-full max-w-xs mx-auto">
+                                        {item.label}
+                                    </p>
+                                    {services.map((service) => (
+                                        <a
+                                            href={`/servicios/${service.slug}/`}
+                                            class="block text-xl text-body hover:text-primary mobile-link"
+                                        >
+                                            {service.data.title}
+                                        </a>
+                                    ))}
+                                </div>
+                            );
+                        }
+
+                        if (item.type === "locations_dropdown") {
+                            return (
+                                <a
+                                    href="/zonas/"
+                                    class="text-2xl font-heading font-bold text-heading hover:text-primary mobile-link"
+                                >
+                                    {item.label}
+                                </a>
+                            );
+                        }
+                    })
+                }
+
+                <a
+                    href={`tel:${(phone || "").replace(/\s/g, "")}`}
+                    class="mt-8 flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-xl font-bold shadow-xl active:scale-95 transition-transform"
+                >
+                    <Phone className="w-6 h-6" />
+                    {ctaText || "LLAMAR AHORA"}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navbar = document.getElementById("navbar");
+
+        const updateNavbar = () => {
+            if (window.scrollY > 20) {
+                navbar?.classList.add(
+                    "bg-secondary/90",
+                    "backdrop-blur-md",
+                    "border-heading/10",
+                    "shadow-lg",
+                    "h-24",
+                );
+                navbar?.classList.remove("border-transparent");
+            } else {
+                navbar?.classList.remove(
+                    "bg-secondary/90",
+                    "backdrop-blur-md",
+                    "border-heading/10",
+                    "shadow-lg",
+                    "h-24",
+                );
+                navbar?.classList.add("border-transparent");
+            }
+        };
+
+        window.addEventListener("scroll", updateNavbar);
+
+        const menuToggle = document.getElementById("menu-toggle");
+        const menuClose = document.getElementById("menu-close");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const mobileLinks = document.querySelectorAll(".mobile-link");
+
+        function toggleMenu() {
+            if (mobileMenu) {
+                mobileMenu.classList.toggle("translate-x-full");
+                document.body.style.overflow = mobileMenu.classList.contains(
+                    "translate-x-full",
+                )
+                    ? "auto"
+                    : "hidden";
+            }
+        }
+
+        menuToggle?.addEventListener("click", toggleMenu);
+        menuClose?.addEventListener("click", toggleMenu);
+
+        mobileLinks.forEach((link) => {
+            link.addEventListener("click", toggleMenu);
+        });
+    </script>
+</header>

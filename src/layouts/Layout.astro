@@ -1,0 +1,209 @@
+---
+import SeoHead from "../components/SeoHead.astro";
+import Navbar from "../components/Navbar.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import CookieBanner from "../components/CookieBanner.astro";
+import SearchConsoleVerification from "../components/SearchConsoleVerification.astro";
+import "../styles/global.css";
+import type { WithContext, Thing } from "schema-dts";
+
+// 1. Imports de configuración
+import { getSettings } from "../lib/settings";
+import { themes } from "../config/themes";
+import { fontPairs } from "../config/fonts"; // Importante: Debes haber creado este archivo
+import { getThemeColors, hexToRgb } from "../utils/theme";
+
+// 2. Recuperar TODA la configuración unificada
+const settings = (await getSettings()) as any;
+
+// 3. Lógica del Tema (Colores)
+let activeTheme = themes.industrial; // Default fallback
+let colors = activeTheme.colors;
+
+try {
+    // Parsear el string JSON del nuevo campo ThemeManager
+    const themeState =
+        typeof settings.themeSettings === "string"
+            ? JSON.parse(settings.themeSettings)
+            : settings.themeSettings; // Por si acaso ya viene parseado o es objeto
+
+    if (themeState && themeState.theme) {
+        // Si el tema es un preset conocido Y tenemos colores en el state, preferimos el state
+        // porque el usuario podría haber editado los colores de un preset.
+        // Pero para simplificar: nuestro ThemeManager guarda TODOS los colores actuales en `colors`.
+        // Así que simplemente confiamos en `themeState.colors`.
+
+        if (themeState.colors) {
+            // Helper local para asegurar formato RGB (RRR GGG BBB)
+            // Si viene en Hex (#ffffff), convertir. Si viene en RGB (255 255 255), dejar.
+            const toRgb = (val: string) => {
+                if (!val) return "0 0 0";
+                if (val.includes(" ")) return val; // Ya es RGB
+                if (val.startsWith("#")) return hexToRgb(val);
+                return val;
+            };
+
+            colors = {
+                primary: toRgb(themeState.colors.primary),
+                secondary: toRgb(themeState.colors.secondary),
+                surface: toRgb(themeState.colors.surface),
+                accent: toRgb(themeState.colors.accent),
+                textMain: toRgb(themeState.colors.textMain),
+                textMuted: toRgb(themeState.colors.textMuted),
+            };
+        }
+
+        // Para el gradiente, si es uno de los presets originales sin modificar, podríamos usar su gradiente.
+        // Pero si el usuario toca algo, mejor un gradiente genérico.
+        // Vamos a mantener la lógica simple: Si es un theme conocido, toma su gradiente.
+        const knownTheme = themes[themeState.theme as keyof typeof themes];
+        if (knownTheme) {
+            activeTheme = knownTheme;
+        } else {
+            // Es custom o desconocido
+            activeTheme = null as any;
+        }
+    }
+} catch (e) {
+    console.error("Error parsing theme settings", e);
+}
+
+// Gradiente
+const gradient =
+    activeTheme?.gradient ||
+    `linear-gradient(135deg, rgb(${colors.primary}) 0%, rgb(${colors.secondary}) 100%)`;
+
+// 4. Lógica de Fuentes (Tipografía)
+// Si settings.fontPair no existe (porque no has actualizado settings.ts), usa 'modern' por defecto
+const activeFont =
+    fontPairs[settings.fontPair as keyof typeof fontPairs] || fontPairs.modern;
+
+interface Props {
+    title: string;
+    description?: string;
+    schema?: WithContext<Thing> | WithContext<Thing>[];
+    noindex?: boolean;
+    stickyPhone?: boolean;
+    whatsappFloat?: boolean;
+}
+
+const {
+    title,
+    description,
+    schema,
+    noindex = false,
+    stickyPhone = true,
+    whatsappFloat = true,
+} = Astro.props;
+
+// Generar descripción por defecto si no viene en props
+const defaultDescription = `${settings.niche} en ${settings.city}. Expertos profesionales, servicio rápido y presupuesto sin compromiso en ${settings.siteName}.`;
+
+// Hero Opacity (Default 0.6)
+const heroOpacity = settings.heroOverlayOpacity ?? 0.6;
+---
+
+<!doctype html>
+<html
+    lang="es"
+    class="scroll-smooth"
+    style={{
+        // --- VARIABLES DE COLOR ---
+        "--color-primary": colors.primary,
+        "--color-secondary": colors.secondary,
+        "--color-surface": colors.surface,
+        "--color-accent": colors.accent,
+        "--color-text-heading": colors.textMain,
+        "--color-text-body": colors.textMuted,
+        "--theme-gradient": gradient,
+        "--hero-opacity": heroOpacity,
+
+        // --- VARIABLES DE FUENTE (NUEVO) ---
+        "--font-heading": activeFont.fontHeading,
+        "--font-body": activeFont.fontBody,
+    }}
+>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+
+        {/* --- CARGA DINÁMICA DE FUENTES DE GOOGLE --- */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href={`${activeFont.googleFontsUrl}&display=swap`}
+            rel="stylesheet"
+        />
+
+        <SeoHead
+            title={title}
+            description={description || defaultDescription}
+            schema={schema}
+            noindex={noindex}
+        />
+
+        <SearchConsoleVerification />
+
+        {/* Google Tag Manager */}
+        {
+            settings.gtmId && (
+                <script type="text/partytown">
+                    {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${settings.gtmId}');`}
+                </script>
+            )
+        }
+
+        {/* Google Analytics 4 */}
+        {
+            settings.googleAnalyticsId && (
+                <>
+                    <script
+                        type="text/partytown"
+                        src={`https://www.googletagmanager.com/gtag/js?id=${settings.googleAnalyticsId}`}
+                    />
+                    <script type="text/partytown">
+                        {`window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', '${settings.googleAnalyticsId}');`}
+                    </script>
+                </>
+            )
+        }
+    </head>
+
+    <body
+        class="bg-secondary text-text font-sans antialiased selection:bg-primary selection:text-white"
+    >
+        {/* GTM noscript fallback */}
+        {
+            settings.gtmId && (
+                <noscript>
+                    <iframe
+                        src={`https://www.googletagmanager.com/ns.html?id=${settings.gtmId}`}
+                        height="0"
+                        width="0"
+                        style="display:none;visibility:hidden"
+                    />
+                </noscript>
+            )
+        }
+        <Navbar />
+
+        <main>
+            <slot />
+        </main>
+
+        <WhatsAppButton
+            stickyPhone={stickyPhone}
+            whatsappFloat={whatsappFloat}
+        />
+        <CookieBanner />
+    </body>
+</html>

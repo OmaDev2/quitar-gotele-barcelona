@@ -1,0 +1,93 @@
+---
+import Layout from "./Layout.astro";
+import Footer from "../components/Footer.astro";
+import FinalCTA from "../components/FinalCTA.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import { CheckCircle, ArrowRight, Shield } from "lucide-react";
+import BlockRenderer from "../components/BlockRenderer.astro";
+import type { Service, Location, Block, FAQItem } from "../types";
+
+interface Props {
+    title: string;
+    shortDesc: string;
+    icon: string;
+    heroImage?: string;
+    faq?: FAQItem[];
+    content: any;
+    slug: string;
+    // Datos globales
+    siteName: string;
+    phone: string;
+    whatsapp?: string;
+    city: string;
+    niche: string;
+    address?: string;
+    coordinates?: { lat: string; lng: string };
+
+    allServices: Service[];
+    allLocations: Location[];
+    testimonials: any[];
+    blocks?: Block[];
+
+    pageTitle: string;
+    pageDescription: string;
+    schema: any;
+    mdxComponents?: any;
+}
+
+const {
+    title,
+    shortDesc,
+    icon,
+    heroImage,
+    faq,
+    content: Content,
+    slug,
+    siteName,
+    phone,
+    whatsapp,
+    city,
+    niche,
+    allServices,
+    allLocations,
+    pageTitle,
+    pageDescription,
+    schema,
+    mdxComponents = {},
+    blocks,
+} = Astro.props;
+
+// Orden por defecto para servicios antiguos
+const defaultBlocks: Block[] = [
+    { discriminant: "hero" },
+    { discriminant: "content" },
+    { discriminant: "faq" },
+    { discriminant: "cta" },
+];
+
+const finalBlocks = blocks && blocks.length > 0 ? blocks : defaultBlocks;
+---
+
+<Layout title={pageTitle} description={pageDescription} schema={schema}>
+    <BlockRenderer
+        blocks={finalBlocks}
+        locationName={city}
+        locationType="residencial"
+        heroImage={heroImage}
+        phone={phone}
+        siteName={siteName}
+        niche={niche}
+        title={title}
+        city={city}
+        content={Content}
+        mdxComponents={mdxComponents}
+        services={allServices}
+        faq={faq}
+        allLocations={allLocations}
+        whatsapp={whatsapp}
+    />
+
+    <WhatsAppButton />
+    <Footer />
+</Layout>

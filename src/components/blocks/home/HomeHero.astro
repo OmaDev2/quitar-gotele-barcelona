@@ -1,0 +1,122 @@
+---
+import { Image } from "astro:assets";
+import defaultHeroImage from "../../../assets/images/hero-home.png"; // Importamos la imagen generada
+import { Phone, CheckCircle } from "lucide-react";
+
+const { hero, config } = Astro.props;
+
+// Lógica Híbrida:
+// Si la imagen es el placeholder por defecto, usamos la versión optimizada de Astro.
+// Si es una imagen subida por el usuario (CMS), usamos la ruta string normal.
+const isDefaultImage =
+    !hero?.backgroundImage ||
+    hero.backgroundImage === "/images/home/hero-placeholder.jpg" ||
+    hero.backgroundImage === "";
+
+const heroBgImage =
+    hero?.backgroundImage || "/images/home/hero-placeholder.jpg";
+---
+
+<section
+    class="relative h-[85vh] min-h-[600px] flex items-center bg-secondary overflow-hidden"
+>
+    <div class="absolute inset-0 w-full h-full">
+        {
+            isDefaultImage ? (
+                <Image
+                    src={defaultHeroImage}
+                    alt={`${config.niche} en ${config.city}`}
+                    class="w-full h-full object-cover"
+                    loading="eager"
+                />
+            ) : (
+                <img
+                    src={heroBgImage}
+                    alt={`${config.niche} en ${config.city}`}
+                    class="w-full h-full object-cover"
+                    fetchpriority="high"
+                    loading="eager"
+                />
+            )
+        }
+    </div>
+    <div
+        class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent"
+        style="opacity: var(--hero-opacity)"
+    >
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl">
+            <h1
+                class="text-5xl lg:text-7xl font-heading font-bold text-heading mb-6 leading-tight"
+            >
+                {
+                    hero?.heading ? (
+                        <>
+                            {hero.heading} <br />
+                            {hero.headingHighlight && (
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                                    {hero.headingHighlight}
+                                </span>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {(config.niche || "Servicio").toUpperCase()} <br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                                EN {(config.city || "Tu Ciudad").toUpperCase()}
+                            </span>
+                        </>
+                    )
+                }
+            </h1>
+            <p
+                class="text-xl text-heading/90 mb-8 font-bold border-l-4 border-primary pl-4 max-w-2xl readable-hero-text"
+            >
+                {
+                    hero?.subheading ||
+                        `⚠️ Configura este subtítulo en el CMS (Página de Inicio > Hero)`
+                }
+            </p>
+            {
+                hero?.features && hero.features.length > 0 && (
+                    <ul class="grid sm:grid-cols-2 gap-y-3 gap-x-6 mb-10">
+                        {hero.features.map((feature: string) => (
+                            <li class="flex items-center gap-2 text-heading font-bold text-sm readable-hero-text">
+                                <CheckCircle className="w-4 h-4 text-primary shrink-0" />
+                                <span>{feature}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                    href={hero?.ctaPrimary?.link || "#presupuesto"}
+                    class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold bg-primary hover:bg-accent text-white rounded transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40"
+                >
+                    <Phone className="w-5 h-5 mr-2" />
+                    {
+                        hero?.ctaPrimary?.text ||
+                            config.ctaText ||
+                            "Pedir Presupuesto"
+                    }
+                </a>
+                <a
+                    href={hero?.ctaSecondary?.link ||
+                        `https://wa.me/${config.whatsapp || (config.phone || "").replace(/\s/g, "")}`}
+                    target={hero?.ctaSecondary?.link?.startsWith("http")
+                        ? "_blank"
+                        : undefined}
+                    rel={hero?.ctaSecondary?.link?.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined}
+                    class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-heading border border-heading/20 rounded hover:bg-surface transition-colors"
+                >
+                    {hero?.ctaSecondary?.text || "WhatsApp"}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

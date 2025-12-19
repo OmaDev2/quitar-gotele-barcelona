@@ -1,0 +1,189 @@
+---
+import { Image } from "astro:assets";
+import defaultServiceImage from "../../assets/images/service-alisado.png";
+import pinturaServiceImage from "../../assets/images/service-pintura.png";
+import {
+    Phone,
+    MapPin,
+    Shield,
+    Clock,
+    CheckCircle2,
+    ArrowRight,
+} from "lucide-react";
+import HeroContactForm from "../HeroContactForm.astro";
+import { spin } from "../../utils/spintax";
+
+// --- PROPS & LOGIC ---
+const props = Astro.props;
+const locationName = spin(props.locationName);
+const niche = spin(props.niche);
+const zipCodes = props.zipCodes;
+const heroImage = props.heroImage;
+const phone = props.phone;
+const title = spin(props.title);
+const isIndustrial = Astro.props.locationType === "industrial";
+
+// Lógica de Selección de Imagen (Mantenida intacta)
+let selectedImage = null;
+let isOptimized = false;
+
+if (!heroImage || heroImage === "/images/services/default.jpg") {
+    selectedImage = defaultServiceImage;
+    isOptimized = true;
+} else if (heroImage === "/images/services/pintura.jpg") {
+    selectedImage = pinturaServiceImage;
+    isOptimized = true;
+} else {
+    selectedImage =
+        heroImage ||
+        (isIndustrial
+            ? "https://images.unsplash.com/photo-1531834685032-c34bf0d84c7c?q=80&w=1997&auto=format&fit=crop"
+            : "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop");
+}
+
+const heroSubtitle = isIndustrial
+    ? `Servicios profesionales de ${(niche || "reformas").toLowerCase()} para empresas y naves.`
+    : `Soluciones de ${(niche || "reformas").toLowerCase()} para particulares y comunidades.`;
+
+// Limpieza de teléfono para el href
+const phoneHref = (phone || "").replace(/\s/g, "");
+---
+
+<section
+    class="relative min-h-[90vh] lg:min-h-[800px] flex items-center bg-secondary overflow-hidden group"
+>
+    {/* --- 1. FONDO E IMAGEN --- */}
+    <div class="absolute inset-0 w-full h-full select-none">
+        {
+            isOptimized ? (
+                <Image
+                    src={selectedImage}
+                    alt={`${niche} en ${locationName}`}
+                    class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[2s]"
+                    loading="eager"
+                    width={1920}
+                    height={1080}
+                />
+            ) : (
+                <img
+                    src={selectedImage}
+                    alt={`${niche} en ${locationName}`}
+                    class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[2s]"
+                    loading="eager"
+                />
+            )
+        }
+        {/* Gradiente estilo "Cine" para oscurecer y dar foco */}
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent"
+            style="opacity: var(--hero-opacity)"
+        >
+        </div>
+        <div
+            class="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent"
+            style="opacity: var(--hero-opacity)"
+        >
+        </div>
+    </div>
+
+    {/* --- 2. CONTENIDO --- */}
+    <div class="container mx-auto px-4 lg:px-8 relative z-10 py-12 lg:py-20">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+            {/* --- COLUMNA IZQUIERDA: TEXTO (7 cols) --- */}
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                {/* Badge Superior */}
+                <div
+                    class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm mx-auto lg:mx-0"
+                >
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"
+                        ></span>
+                        <span
+                            class="relative inline-flex rounded-full h-2 w-2 bg-primary"
+                        ></span>
+                    </span>
+                    Disponible en {locationName}
+                </div>
+
+                {/* Título Principal */}
+                <h1
+                    class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black text-heading leading-[1.1] drop-shadow-2xl"
+                >
+                    {
+                        title ? (
+                            <span set:html={title} />
+                        ) : (
+                            <>
+                                {isIndustrial
+                                    ? "Soluciones Industriales"
+                                    : "Renueva Tu Espacio"}
+                                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary bg-[length:200%_auto] animate-shine mt-2">
+                                    en {locationName}
+                                </span>
+                            </>
+                        )
+                    }
+                </h1>
+
+                {/* Descripción */}
+                <p
+                    class="text-lg text-heading/90 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-bold border-l-2 border-primary/30 pl-4 lg:pl-6 readable-hero-text"
+                >
+                    {heroSubtitle}
+                    <span class="hidden sm:inline"
+                        >Garantizamos resultados impecables, limpieza absoluta y
+                        cumplimiento estricto de plazos.</span
+                    >
+                </p>
+
+                {/* Botones de Acción */}
+                <div
+                    class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start pt-6"
+                >
+                    <a
+                        href={`tel:${phoneHref}`}
+                        class="group relative inline-flex items-center justify-center px-10 py-6 text-xl font-black text-white bg-primary rounded-2xl overflow-hidden shadow-2xl shadow-primary/40 hover:shadow-primary/60 transition-all hover:-translate-y-1"
+                    >
+                        <div
+                            class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine-fast"
+                        >
+                        </div>
+                        <Phone
+                            className="w-7 h-7 mr-4 animate-pulse shrink-0"
+                        />
+                        <div class="flex flex-col items-start leading-tight">
+                            <span
+                                class="text-[11px] uppercase tracking-[0.2em] opacity-80 font-black mb-0.5"
+                                >Llamar Ahora</span
+                            >
+                            <span class="text-2xl tracking-tighter"
+                                >{phone}</span
+                            >
+                        </div>
+                    </a>
+
+                    <a
+                        href="/contacto"
+                        class="inline-flex items-center justify-center px-10 py-6 text-lg font-bold text-heading bg-white/10 border-2 border-white/20 hover:bg-white/20 rounded-2xl backdrop-blur-2xl transition-all hover:-translate-y-1 hover:border-primary/50 group"
+                    >
+                        <span class="mr-3">Pedir Presupuesto</span>
+                        <ArrowRight
+                            className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
+                        />
+                    </a>
+                </div>
+
+                {/* Trust Signals (Iconos inferiores) */}
+                <div
+                    class="pt-6 grid grid-cols-3 gap-2 lg:gap-8 border-t border-white/5 max-w-lg mx-auto lg:mx-0"
+                >
+                    <div
+                        class="flex flex-col lg:flex-row items-center gap-2 text-center lg:text-left"
+                    >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
