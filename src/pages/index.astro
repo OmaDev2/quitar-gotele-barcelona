@@ -106,15 +106,7 @@ const homepageFaqs =
 	[];
 const faqSchema = generateFAQSchema(homepageFaqs);
 
-const breadcrumbsSchema = generateBreadcrumbsList([
-	{ name: "Inicio", item: Astro.site?.href || Astro.url.origin },
-]);
-
-const schema = [
-	localBusinessSchema,
-	breadcrumbsSchema,
-	...(faqSchema ? [faqSchema] : []),
-] as any;
+const schema = [localBusinessSchema, ...(faqSchema ? [faqSchema] : [])] as any;
 ---
 
 <Layout

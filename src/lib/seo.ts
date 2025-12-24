@@ -37,14 +37,21 @@ export function generateFAQSchema(faqs: { question: string; answer: string }[]):
     return {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: faqs.map(faq => ({
-            "@type": "Question",
-            name: faq.question,
-            acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer
-            }
-        }))
+        mainEntity: faqs.map(faq => {
+            // Fix: Google Rich Snippets no soportan Markdown, convertir a HTML básico
+            const htmlAnswer = faq.answer
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Negritas
+                .replace(/\n/g, "<br>"); // Saltos de línea
+
+            return {
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: htmlAnswer
+                }
+            };
+        })
     };
 }
 
@@ -177,8 +184,10 @@ export function generateLocalBusinessSchema(
     // }
 
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
-        // CORRECCIÓN: URL válida y clicable de Google Maps
-        schema.hasMap = `https://www.google.com/maps?q=${settings.coordinates.lat},${settings.coordinates.lng}`;
+        // CORRECCIÓN: URL válida y clicable de Google Maps (Solo si NO es SAB)
+        if (!settings.isSAB) {
+            schema.hasMap = `https://www.google.com/maps?q=${settings.coordinates.lat},${settings.coordinates.lng}`;
+        }
 
         schema.geo = {
             "@type": "GeoCoordinates",

@@ -1,10 +1,10 @@
-siteName: 'Quitar Gotelé  Barcelona '
-niche: 'Quitar Gotelé '
-logo: '@assets/images/logo.png'
+siteName: 'Quitar Gotelé Barcelona'
+niche: 'Quitar Gotelé'
+logo: 'https://quitargotelebarcelona.es/images/logo.png'
 siteUrl: https://quitargotelebarcelona.es
 businessType: HousePainter
-city: 'Barcelona '
-address: 'Barcelona '
+city: 'Barcelona'
+address: 'Barcelona'
 coordinates:
   lat: '41.3851'
   lng: '2.1734'
