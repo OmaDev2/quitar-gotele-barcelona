@@ -60,14 +60,14 @@ const shadowClass = shadowClasses[shadow] || shadowClasses.lg;
                         alt={alt || ""}
                         class={`w-full h-auto group-hover:scale-105 transition-transform duration-700 ${fitClass}`}
                         loading="lazy"
+                        width="800"
+                        height="450"
                     />
                 ) : (
                     <Image
                         src={image}
                         alt={alt || ""}
                         class={`w-full h-auto group-hover:scale-105 transition-transform duration-700 ${fitClass}`}
-                        width={1200}
-                        height={630}
                         inferSize={true}
                     />
                 )

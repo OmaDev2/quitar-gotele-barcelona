@@ -28,6 +28,8 @@ const heroBgImage =
                     alt={`${config.niche} en ${config.city}`}
                     class="w-full h-full object-cover"
                     loading="eager"
+                    width={1920}
+                    height={1080}
                 />
             ) : (
                 <img
@@ -36,6 +38,8 @@ const heroBgImage =
                     class="w-full h-full object-cover"
                     fetchpriority="high"
                     loading="eager"
+                    width="1920"
+                    height="1080"
                 />
             )
         }

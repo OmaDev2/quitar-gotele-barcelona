@@ -48,12 +48,16 @@ const formatDate = (dateString?: string) => {
                                         src={post.data.image} 
                                         alt={post.data.title}
                                         class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                                        width="600"
+                                        height="338"
                                     />
                                 ) : (
                                     <img 
                                         src="/images/blog/default.webp" 
                                         alt={post.data.title}
                                         class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 opacity-60"
+                                        width="600"
+                                        height="338"
                                     />
                                 )}
                                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>

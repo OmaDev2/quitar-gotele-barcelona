@@ -26,12 +26,16 @@ const aboutImage = aboutSection.image || "/images/home/about-placeholder.jpg";
                                 src={defaultAboutImage}
                                 alt={aboutSection.title || "Sobre Nosotros"}
                                 class="w-full h-full object-cover"
+                                width={800}
+                                height={600}
                             />
                         ) : (
                             <img
-                                src={aboutImage}
-                                alt={aboutSection.title || "Sobre Nosotros"}
-                                class="w-full h-full object-cover"
+                                src={aboutSection.image}
+                                alt={aboutSection.title}
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                width="800"
+                                height="600"
                             />
                         )
                     }
