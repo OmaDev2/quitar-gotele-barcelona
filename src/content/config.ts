@@ -139,6 +139,7 @@ const business = defineCollection({
         schedule: z.string().optional(),
         nif: z.string().optional(),
         ctaText: z.string().optional(),
+        isSAB: z.boolean().default(false),
     }),
 });
 

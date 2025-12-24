@@ -90,5 +90,11 @@ export const business = singleton({
             label: 'Texto Botón CTA',
             description: 'Ej: Pedir Presupuesto, Llamar Ahora'
         }),
+
+        isSAB: fields.checkbox({
+            label: 'Es un Negocio de Área de Servicio (SAB)',
+            description: 'Marca esto si NO recibes clientes en tu dirección (ocultará la calle en el Schema)',
+            defaultValue: false,
+        }),
     },
 });

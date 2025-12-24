@@ -30,6 +30,7 @@ export async function getSettings() {
         schedule: business?.data?.schedule || 'Lunes a Viernes: 9:00 - 18:00',
         nif: business?.data?.nif || 'B12345678',
         ctaText: business?.data?.ctaText || 'PEDIR PRESUPUESTO',
+        isSAB: business?.data?.isSAB ?? false,
 
         // Design
         themeSettings: design?.data?.themeSettings, // NEW: Full JSON object/string

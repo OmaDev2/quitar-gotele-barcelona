@@ -82,6 +82,7 @@ interface LocalBusinessSettings {
     paymentAccepted?: string[]; // Añadido
     knowsAbout?: string[]; // Añadido por SEO
     slogan?: string; // Añadido
+    isSAB?: boolean; // Añadido
 }
 
 /**
@@ -128,21 +129,24 @@ export function generateLocalBusinessSchema(
 ): WithContext<LocalBusiness> {
     const aggregateRating = getAggregateRating(testimonials);
 
-    const schema: WithContext<LocalBusiness> = {
+    const schema: any = {
         "@context": "https://schema.org",
-        "@type": (settings.businessType as any) || "LocalBusiness",
+        "@type": ["HomeAndConstructionBusiness", (settings.businessType || "HousePainter")],
         name: settings.siteName || "Negocio Local",
         image: settings.image,
         telephone: settings.phone,
         url: url,
         description: settings.description,
-        address: {
-            "@type": "PostalAddress",
-            addressLocality: settings.city || "",
-            addressRegion: settings.city || "",
-            addressCountry: "ES",
-            streetAddress: settings.address || settings.city || ""
-        },
+        // SOLUCIÓN CORRECTA: Eliminar address completamente si es SAB (Service Area Business)
+        ...(!settings.isSAB ? {
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: settings.city || "",
+                addressRegion: settings.city || "",
+                addressCountry: "ES",
+                ...(settings.address && settings.address !== settings.city ? { streetAddress: settings.address } : {})
+            }
+        } : {}),
         priceRange: settings.priceRange || "€",
         currenciesAccepted: "EUR",
     };
