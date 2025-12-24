@@ -87,7 +87,7 @@ const localSchema = generateLocalBusinessSchema(
 
 const breadcrumbsPoints = [
     { name: "Inicio", item: Astro.site?.href || "https://example.com" },
-    { name: "Zonas", item: new URL("/zonas", Astro.site).href },
+    { name: "Zonas", item: new URL("/zonas/", Astro.site).href },
     { name: data.name, item: Astro.url.href },
 ];
 
