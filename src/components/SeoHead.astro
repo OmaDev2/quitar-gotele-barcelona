@@ -41,6 +41,9 @@ const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g
   }}
   twitter={{
     card: "summary_large_image",
+    title: title,
+    description: description,
+    image: image || defaultOgImage,
   }}
   noindex={noindex}
   nofollow={noindex}

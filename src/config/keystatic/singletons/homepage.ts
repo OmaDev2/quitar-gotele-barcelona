@@ -386,6 +386,8 @@ export const homepage = singleton({
         content: fields.mdx({ label: 'Contenido Adicional (Opcional)' }),
 
         // Campos adicionales para SEO y UI
+        seoTitle: fields.text({ label: 'SEO Title (Meta Título)' }),
+        seoDescription: fields.text({ label: 'SEO Description (Meta Descripción)', multiline: true }),
         seoContentTitle: fields.text({ label: 'Título del Bloque Seo (Opcional)' }),
         stickyPhone: fields.checkbox({ label: 'Mostrar Teléfono Sticky', defaultValue: true }),
         whatsappFloat: fields.checkbox({ label: 'Mostrar WhatsApp Flotante', defaultValue: true }),

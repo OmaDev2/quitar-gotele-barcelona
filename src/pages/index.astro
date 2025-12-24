@@ -114,7 +114,9 @@ const schema = [
 ---
 
 <Layout
-	title={`${homeData.hero?.heading || config.niche + " en " + config.city} | ${config.siteName}`}
+	title={homeData.seoTitle ||
+		`${homeData.hero?.heading || config.niche + " en " + config.city} | ${config.siteName}`}
+	description={homeData.seoDescription}
 	schema={schema}
 	stickyPhone={homeData.stickyPhone}
 	whatsappFloat={homeData.whatsappFloat}

@@ -50,9 +50,11 @@ const formatDate = (dateString?: string) => {
                                         class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                                     />
                                 ) : (
-                                    <div class="w-full h-full bg-secondary/20 flex items-center justify-center">
-                                        <span class="text-4xl">📝</span>
-                                    </div>
+                                    <img 
+                                        src="/images/blog/default.webp" 
+                                        alt={post.data.title}
+                                        class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 opacity-60"
+                                    />
                                 )}
                                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
                             </a>

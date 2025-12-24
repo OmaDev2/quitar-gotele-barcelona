@@ -237,6 +237,8 @@ const pages = defineCollection({
 
         // Campos Adicionales
         seoContentTitle: z.string().optional(),
+        seoTitle: z.string().optional(),
+        seoDescription: z.string().optional(),
         stickyPhone: z.boolean().optional().default(true),
 
         // Legacy/Generator Fields
