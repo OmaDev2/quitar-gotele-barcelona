@@ -51,6 +51,8 @@ interface Props {
     currentSlug?: string;
     whatsapp?: string;
     isHome?: boolean;
+    isService?: boolean;
+    isLocation?: boolean;
     config?: any; // Global settings
 }
 
@@ -75,6 +77,8 @@ const {
     currentSlug,
     whatsapp,
     isHome,
+    isService,
+    isLocation,
     config,
 } = Astro.props;
 ---
@@ -94,7 +98,9 @@ const {
                     <div class="relative group">
                         <Breadcrumbs
                             locationName={locationName}
-                            isLocation={true}
+                            serviceName={title}
+                            isLocation={isLocation}
+                            isService={isService}
                         />
 
                         <HeroBlock

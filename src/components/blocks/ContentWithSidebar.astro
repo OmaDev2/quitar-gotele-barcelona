@@ -104,7 +104,7 @@ const currentIconBgClass = iconBgMap[urgencyStyle] || "bg-primary";
                         <div class="grid md:grid-cols-2 gap-6">
                             {services.map((service) => (
                                 <a
-                                    href={`/${service.slug}`}
+                                    href={`/servicios/${service.slug}/`}
                                     class="group relative p-6 rounded-2xl bg-surface border border-heading/5 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 overflow-hidden"
                                 >
                                     <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -206,7 +206,7 @@ const currentIconBgClass = iconBgMap[urgencyStyle] || "bg-primary";
                                     .map((location) => (
                                         <li>
                                             <a
-                                                href={`/zona/${location.slug}`}
+                                                href={`/zona/${location.slug}/`}
                                                 class="block p-3 rounded-lg hover:bg-primary/5 text-body hover:text-primary transition-all text-sm flex justify-between items-center group"
                                             >
                                                 <span class="font-medium">

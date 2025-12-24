@@ -83,7 +83,7 @@ const servicesToDisplay = customServices || featuredServices;
                                     isPopular: item.value.isPopular || false,
                                 };
                                 slug = foundService.slug;
-                                link = `/${slug}`;
+                                link = `/servicios/${foundService.slug}/`;
                             } else {
                                 // Fallback si no se encuentra el servicio (aunque no debería pasar)
                                 data = {
@@ -100,7 +100,7 @@ const servicesToDisplay = customServices || featuredServices;
                     else if (item.data) {
                         data = item.data;
                         slug = item.slug;
-                        link = `/${slug}`;
+                        link = `/servicios/${item.slug}/`;
                     }
                     // 3. Caso Manual Antiguo (si hubiera datos legacy sin discriminant)
                     else {

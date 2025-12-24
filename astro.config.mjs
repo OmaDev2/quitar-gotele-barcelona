@@ -28,7 +28,7 @@ export default defineConfig({
   site: siteUrl,
 
   // 🔗 Trailing slash: siempre con barra al final (bueno para SEO)
-  trailingSlash: 'ignore',
+  trailingSlash: 'always',
 
   image: {
     domains: ["images.unsplash.com"],

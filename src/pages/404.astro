@@ -79,7 +79,7 @@ const suggestedServices = services.slice(0, 4); // Mostramos los 4 primeros
                             <div class="grid sm:grid-cols-2 gap-4">
                                 {suggestedServices.map((service) => (
                                     <a
-                                        href={`/${service.slug}`}
+                                        href={`/servicios/${service.slug}/`}
                                         class="flex items-center justify-between p-4 bg-surface border border-heading/5 rounded-lg hover:border-primary/50 transition-colors group text-left"
                                     >
                                         <span class="text-body group-hover:text-primary transition-colors font-medium">

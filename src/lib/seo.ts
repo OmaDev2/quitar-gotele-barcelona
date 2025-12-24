@@ -184,13 +184,7 @@ export function generateLocalBusinessSchema(
     // if (aggregateRating) {
     //     schema.aggregateRating = aggregateRating;
     // }
-
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
-        // CORRECCIÓN: URL válida y clicable de Google Maps (Solo si NO es SAB)
-        if (!settings.isSAB) {
-            schema.hasMap = `https://www.google.com/maps?q=${settings.coordinates.lat},${settings.coordinates.lng}`;
-        }
-
         schema.geo = {
             "@type": "GeoCoordinates",
             latitude: settings.coordinates.lat,
