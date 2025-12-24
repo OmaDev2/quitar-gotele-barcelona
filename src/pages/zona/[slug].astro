@@ -76,6 +76,7 @@ const localSchema = generateLocalBusinessSchema(
         paymentAccepted: settings.paymentAccepted,
         slogan: settings.slogan,
         knowsAbout: allServices.map((s) => s.data.title),
+        isSAB: settings.isSAB,
     },
     testimonials,
     Astro.url.href,

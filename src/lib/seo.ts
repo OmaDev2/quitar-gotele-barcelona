@@ -94,7 +94,7 @@ export function formatAreaServed(areaData: any, radius?: number, coordinates?: {
         return areaData.map(item => {
             if (typeof item === 'string') {
                 return {
-                    "@type": "City",
+                    "@type": "AdministrativeArea",
                     name: item
                 };
             }
