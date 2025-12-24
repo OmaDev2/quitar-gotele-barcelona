@@ -4,7 +4,7 @@ import type { WithContext, Thing } from "schema-dts";
 import { getSettings } from "../lib/settings";
 
 const settings = await getSettings();
-const siteName = settings.siteName || "Herrero Zaragoza";
+const siteName = settings.siteName;
 
 interface Props {
   title: string;
