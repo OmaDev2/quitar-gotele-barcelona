@@ -140,7 +140,9 @@ export function generateLocalBusinessSchema(
         "@context": "https://schema.org",
         "@type": ["HomeAndConstructionBusiness", (settings.businessType || "HousePainter")],
         name: settings.siteName || "Negocio Local",
-        image: settings.image,
+        image: settings.image?.startsWith("@assets")
+            ? "https://quitargotelebarcelona.es/images/logo.png"
+            : settings.image,
         telephone: settings.phone,
         url: url,
         description: settings.description,
