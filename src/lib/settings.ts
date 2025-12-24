@@ -54,5 +54,6 @@ export async function getSettings() {
         paymentAccepted: schema?.data?.paymentAccepted || [],
         foundingDate: schema?.data?.foundingDate || '',
         slogan: schema?.data?.slogan || '',
+        knowsAbout: schema?.data?.knowsAbout || [],
     };
 }

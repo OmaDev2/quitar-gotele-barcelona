@@ -92,7 +92,7 @@ const serviceSchema: WithContext<Service> = {
         "@type": "City",
         name: settings.city,
     },
-    ...(aggregateRating && { aggregateRating }), // También a nivel de servicio
+    // ...(aggregateRating && { aggregateRating }), // También a nivel de servicio
 };
 
 const breadcrumbsPoints = [

@@ -172,9 +172,9 @@ export function generateLocalBusinessSchema(
         (schema as any).knowsAbout = settings.knowsAbout;
     }
 
-    if (aggregateRating) {
-        schema.aggregateRating = aggregateRating;
-    }
+    // if (aggregateRating) {
+    //     schema.aggregateRating = aggregateRating;
+    // }
 
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
         // CORRECCIÓN: URL válida y clicable de Google Maps

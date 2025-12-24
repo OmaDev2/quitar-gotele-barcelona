@@ -89,7 +89,10 @@ const localBusinessSchema = generateLocalBusinessSchema(
 		openingHours: config.openingHours,
 		paymentAccepted: config.paymentAccepted,
 		slogan: config.slogan,
-		knowsAbout: allServices.map((s) => s.data.title),
+		knowsAbout:
+			config.knowsAbout?.length > 0
+				? config.knowsAbout
+				: allServices.map((s) => s.data.title),
 		isSAB: config.isSAB,
 	},
 	testimonialsCollection,

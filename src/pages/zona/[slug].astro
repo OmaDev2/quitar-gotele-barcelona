@@ -75,7 +75,10 @@ const localSchema = generateLocalBusinessSchema(
         openingHours: settings.openingHours,
         paymentAccepted: settings.paymentAccepted,
         slogan: settings.slogan,
-        knowsAbout: allServices.map((s) => s.data.title),
+        knowsAbout:
+            settings.knowsAbout?.length > 0
+                ? settings.knowsAbout
+                : allServices.map((s) => s.data.title),
         isSAB: settings.isSAB,
     },
     testimonials,

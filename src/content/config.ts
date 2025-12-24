@@ -196,6 +196,7 @@ const schema = defineCollection({
         paymentAccepted: z.array(z.string()).optional(),
         foundingDate: z.string().optional(),
         slogan: z.string().optional(),
+        knowsAbout: z.array(z.string()).optional(),
     }),
 });
 

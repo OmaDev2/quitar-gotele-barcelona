@@ -1,15 +1,11 @@
 priceRange: €€
 openingHours:
   - dayOfWeek:
-      - Monday
-      - Tuesday
-      - Wednesday
-      - Thursday
-      - Friday
+      - Mo-Fr
     opens: '09:00'
     closes: '18:00'
   - dayOfWeek:
-      - Saturday
+      - Sa
     opens: '10:00'
     closes: '12:00'
 areaServed:
@@ -27,4 +23,10 @@ paymentAccepted:
   - Bank Transfer
   - Bizum
 foundingDate: '2010'
-slogan: Expertos en alisar tu hogar, apasionados por el acabado perfecto."
+slogan: Expertos en alisar tu hogar, apasionados por el acabado perfecto
+knowsAbout:
+  - Quitar gotelé
+  - Alisado de paredes
+  - Alisado de techos
+  - Pintura interior
+  - Reformas interiores
