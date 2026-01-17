@@ -203,6 +203,17 @@
             });
 
         document
+            .getElementById("open-cookie-settings")
+            ?.addEventListener("click", (e) => {
+                e.preventDefault();
+                const modal = document.getElementById("cookie-modal");
+                if (modal) {
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex");
+                }
+            });
+
+        document
             .getElementById("cookie-modal-close")
             ?.addEventListener("click", () => {
                 const modal = document.getElementById("cookie-modal");

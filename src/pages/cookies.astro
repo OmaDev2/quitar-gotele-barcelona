@@ -7,7 +7,7 @@ import { getSettings } from "../lib/settings";
 import { getEntry } from "astro:content";
 
 // Fetch Global Settings
-const { siteName, email } = await getSettings();
+const { siteName, legalEmail: email } = await getSettings();
 
 const legalEntry = await getEntry("legal", "cookies");
 const { Content } = legalEntry ? await legalEntry.render() : { Content: null };

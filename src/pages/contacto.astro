@@ -14,6 +14,7 @@ const { siteName, phone, email, address, city, niche, schedule, coordinates } =
 
 // Import Schema Helpers
 import { generateLocalBusinessSchema } from "@/lib/seo";
+import { generateTelUrl } from "@/utils/contact";
 
 const localBusinessSchema = generateLocalBusinessSchema(
     {
@@ -73,7 +74,7 @@ const schema: WithContext<ContactPage> = {
                                         Teléfono / WhatsApp
                                     </h4>
                                     <a
-                                        href={`tel:${(phone || "").replace(/\s/g, "")}`}
+                                        href={generateTelUrl(phone)}
                                         class="text-body hover:text-primary transition-colors text-lg"
                                         >{phone}</a
                                     >
@@ -260,8 +261,8 @@ const schema: WithContext<ContactPage> = {
                                     target="_blank"
                                     class="text-primary hover:text-accent underline font-bold"
                                     >Política de Privacidad</a
-                                > y consiento que mis datos sean tratados para gestionar
-                                la solicitud. *
+                                > y consiento que mis datos sean cedidos a profesionales
+                                colaboradores para recibir presupuestos. *
                             </label>
                         </div>
 

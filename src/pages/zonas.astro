@@ -21,8 +21,13 @@ const locations = await getCollection("locations");
 
 // Fetch Global Settings (Dinámico)
 import { getSettings } from "@/lib/settings";
+import { generateWhatsAppUrl, generateTelUrl } from "@/utils/contact";
+
 const settings = await getSettings();
 const { siteName, city, niche, phone, whatsapp } = settings;
+
+const phoneUrl = generateTelUrl(phone);
+const whatsappUrl = generateWhatsAppUrl(whatsapp || phone);
 
 // Agrupar por tipo
 const residenciales = locations.filter(
@@ -113,7 +118,7 @@ const schema: WithContext<CollectionPage> = {
                     Buscar mi Zona
                 </a>
                 <a
-                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    href={phoneUrl}
                     class="px-8 py-4 bg-white/5 text-heading font-bold rounded-lg hover:bg-white/10 transition-all border border-white/10 flex items-center gap-2 group"
                 >
                     <Phone
@@ -356,7 +361,7 @@ const schema: WithContext<CollectionPage> = {
                         class="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
                         <a
-                            href={`https://wa.me/${whatsapp.replace(/\s/g, "")}`}
+                            href={whatsappUrl}
                             class="w-full sm:w-auto px-8 py-4 bg-primary text-black font-bold text-base tracking-widest uppercase rounded-lg hover:bg-primary/90 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-2 group"
                         >
                             <MessageCircle
@@ -365,7 +370,7 @@ const schema: WithContext<CollectionPage> = {
                             WhatsApp
                         </a>
                         <a
-                            href={`tel:${phone.replace(/\s/g, "")}`}
+                            href={phoneUrl}
                             class="w-full sm:w-auto px-8 py-4 bg-white/10 text-heading border border-white/20 font-bold text-base tracking-widest uppercase rounded-lg hover:bg-white/20 transition-all flex items-center justify-center gap-2 group"
                         >
                             <Phone

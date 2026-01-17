@@ -2,8 +2,12 @@
 import { Image } from "astro:assets";
 import defaultHeroImage from "../../../assets/images/hero-home.png"; // Importamos la imagen generada
 import { Phone, CheckCircle } from "lucide-react";
+import { generateWhatsAppUrl } from "../../../utils/contact";
 
 const { hero, config } = Astro.props;
+
+// Construimos la URL de WhatsApp de forma robusta
+const whatsappUrl = generateWhatsAppUrl(config.whatsapp || config.phone);
 
 // Lógica Híbrida:
 // Si la imagen es el placeholder por defecto, usamos la versión optimizada de Astro.
@@ -108,8 +112,7 @@ const heroBgImage =
                     }
                 </a>
                 <a
-                    href={hero?.ctaSecondary?.link ||
-                        `https://wa.me/${config.whatsapp || (config.phone || "").replace(/\s/g, "")}`}
+                    href={hero?.ctaSecondary?.link || whatsappUrl}
                     target={hero?.ctaSecondary?.link?.startsWith("http")
                         ? "_blank"
                         : undefined}

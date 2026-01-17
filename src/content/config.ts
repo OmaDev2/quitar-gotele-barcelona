@@ -140,6 +140,11 @@ const business = defineCollection({
         nif: z.string().optional(),
         ctaText: z.string().optional(),
         isSAB: z.boolean().default(false),
+        // --- LEGAL INFO (Private/Rank and Rent) ---
+        legalName: z.string().optional(),
+        legalNIF: z.string().optional(),
+        legalAddress: z.string().optional(),
+        legalEmail: z.string().optional(),
     }),
 });
 

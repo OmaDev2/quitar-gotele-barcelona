@@ -1,16 +1,20 @@
 siteName: 'Quitar Gotelé Barcelona'
-niche: 'Quitar Gotelé'
+niche: 'Quitar Gotelé y Pintura'
 logo: '@assets/images/logo.png'
-siteUrl: https://quitargotelebarcelona.es
+siteUrl: 'https://quitargotelebarcelona.es'
 businessType: HousePainter
 city: 'Barcelona'
-address: 'Barcelona'
-coordinates:
-  lat: '41.3851'
-  lng: '2.1734'
+address: 'Barcelona' # Público: Solo la ciudad o zona comercial
 phone: '+34644371602'
 whatsapp: '34644371602'
-email: quitar@bcn.com
-schedule: Lun-Vie 9:00-18:00, Sáb 10:00-14:00
-ctaText: Quiero mis paredes Lisas Ya!
+email: 'presupuestos@quitargotelebarcelona.es' # Público: Email del sitio
+schedule: 'Lun-Vie 9:00-18:00, Sáb 10:00-14:00'
+nif: '' # Público: Lo dejamos vacío para el pie de página
+ctaText: 'Quiero mis paredes Lisas Ya!'
 isSAB: true
+
+# --- DATOS LEGALES (Privados - Solo para Aviso Legal y Privacidad) ---
+legalName: 'Olga Millán'
+legalNIF: '43675068T'
+legalAddress: 'C/ Pasteur - Tordera, Barcelona'
+legalEmail: 'olga.millan@gmail.com'

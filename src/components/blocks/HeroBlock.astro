@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import HeroContactForm from "../HeroContactForm.astro";
 import { spin } from "../../utils/spintax";
+import { generateTelUrl } from "../../utils/contact";
 
 // --- PROPS & LOGIC ---
 const props = Astro.props;
@@ -46,7 +47,7 @@ const heroSubtitle = isIndustrial
     : `Soluciones de ${(niche || "reformas").toLowerCase()} para particulares y comunidades.`;
 
 // Limpieza de teléfono para el href
-const phoneHref = (phone || "").replace(/\s/g, "");
+const phoneHref = generateTelUrl(phone);
 ---
 
 <section
@@ -144,7 +145,7 @@ const phoneHref = (phone || "").replace(/\s/g, "");
                     class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start pt-6"
                 >
                     <a
-                        href={`tel:${phoneHref}`}
+                        href={phoneHref}
                         class="group relative inline-flex items-center justify-center px-10 py-6 text-xl font-black text-white bg-primary rounded-2xl overflow-hidden shadow-2xl shadow-primary/40 hover:shadow-primary/60 transition-all hover:-translate-y-1"
                     >
                         <div

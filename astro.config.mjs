@@ -28,7 +28,8 @@ export default defineConfig({
   site: siteUrl,
 
   // 🔗 Trailing slash: siempre con barra al final (bueno para SEO)
-  trailingSlash: 'always',
+  // 🔗 Trailing slash: Ignoramos para evitar conflictos con Keystatic admin
+  trailingSlash: 'ignore',
 
   image: {
     domains: ["images.unsplash.com"],
@@ -54,8 +55,8 @@ export default defineConfig({
     })
   ],
 
-  // ✅ MODO SERVER: SSR completo necesario para Keystatic CMS
-  output: 'static',
+  // ✅ MODO SERVER: Necesario para Keystatic y API routes
+  output: 'server',
   adapter: netlify(),
 
   vite: {

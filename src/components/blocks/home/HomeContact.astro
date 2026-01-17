@@ -1,6 +1,8 @@
 ---
 import { Phone, MapPin, MessageCircle } from "lucide-react";
 import HeroContactForm from "../../HeroContactForm.astro";
+import { generateTelUrl, generateWhatsAppUrl } from "@/utils/contact";
+
 const { config, bgClass = "bg-secondary", contactSection } = Astro.props;
 
 // Determine inner container background based on section background
@@ -41,7 +43,7 @@ const containerBgClass =
                                 Presupuesto Gratis.
                             </div>
                             <a
-                                href={`tel:${(config.phone || "").replace(/\s/g, "")}`}
+                                href={generateTelUrl(config.phone)}
                                 class="text-2xl font-heading font-bold text-heading hover:text-primary transition-colors"
                             >
                                 {config.phone || "Teléfono no disponible"}
@@ -60,7 +62,9 @@ const containerBgClass =
                                         WhatsApp
                                     </div>
                                     <a
-                                        href={`https://wa.me/${(config.whatsapp || "").replace(/\D/g, "")}`}
+                                        href={generateWhatsAppUrl(
+                                            config.whatsapp,
+                                        )}
                                         target="_blank"
                                         class="text-2xl font-heading font-bold text-heading hover:text-brand-whatsapp transition-colors"
                                     >

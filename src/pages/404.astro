@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 import { Home, Phone, ArrowRight } from "lucide-react";
 import { getEntry, getCollection } from "astro:content";
+import { generateTelUrl } from "@/utils/contact";
 
 // Fetch Global Settings
 const business = await getEntry("business", "global");
@@ -61,7 +62,7 @@ const suggestedServices = services.slice(0, 4); // Mostramos los 4 primeros
                     </a>
 
                     <a
-                        href={`tel:${(phone || "").replace(/\s/g, "")}`}
+                        href={generateTelUrl(phone)}
                         class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-heading border-2 border-primary hover:bg-primary hover:text-white rounded-lg transition-all transform hover:-translate-y-0.5"
                     >
                         <Phone className="w-5 h-5 mr-2" />

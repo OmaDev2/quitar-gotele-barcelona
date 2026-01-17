@@ -7,7 +7,7 @@ import { getSettings } from "../lib/settings";
 import { getEntry } from "astro:content";
 
 // Fetch Global Settings
-const { siteName, city, niche, email, address, nif } = await getSettings();
+const { siteName, city, niche, legalEmail: email, legalAddress: address, legalNIF: nif, legalName } = await getSettings();
 
 // Fetch Legal Content from CMS
 const legacyEntry = await getEntry("legal", "aviso-legal");
@@ -70,7 +70,7 @@ const { Content } = legacyEntry ? await legacyEntry.render() : { Content: null }
                                     <strong class="text-heading"
                                         >Titular:</strong
                                     >
-                                    {siteName}
+                                    {legalName}
                                 </li>
                                 <li>
                                     <strong class="text-heading"

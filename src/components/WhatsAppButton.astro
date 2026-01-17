@@ -1,10 +1,11 @@
 ---
 import { getEntry } from "astro:content";
+import { generateWhatsAppUrl, generateTelUrl } from "../utils/contact";
 
 const business = await getEntry("business", "global");
-const whatsappUrl = `https://wa.me/${business?.data?.whatsapp || business?.data?.phone || "34600000000"}?text=Hola,%20necesito%20información`;
+const whatsappUrl = generateWhatsAppUrl(business?.data?.whatsapp || business?.data?.phone);
 const { stickyPhone = true, whatsappFloat = true } = Astro.props;
-const phoneUrl = `tel:${business?.data?.phone?.replace(/\s/g, "") || ""}`;
+const phoneUrl = generateTelUrl(business?.data?.phone || "");
 ---
 
 <!-- Botón Teléfono (Solo móvil y si está activado) -->{

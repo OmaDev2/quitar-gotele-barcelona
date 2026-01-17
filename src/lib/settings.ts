@@ -31,6 +31,10 @@ export async function getSettings() {
         nif: business?.data?.nif || 'B12345678',
         ctaText: business?.data?.ctaText || 'PEDIR PRESUPUESTO',
         isSAB: business?.data?.isSAB ?? false,
+        legalName: business?.data?.legalName || business?.data?.siteName || 'Olga Millán',
+        legalNIF: business?.data?.legalNIF || business?.data?.nif || '43675068T',
+        legalAddress: business?.data?.legalAddress || business?.data?.address || 'Barcelona',
+        legalEmail: business?.data?.legalEmail || business?.data?.email || 'info@ejemplo.com',
 
         // Design
         themeSettings: design?.data?.themeSettings, // NEW: Full JSON object/string

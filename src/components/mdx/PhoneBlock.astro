@@ -1,9 +1,10 @@
 ---
 import { getSettings } from "@/lib/settings";
+import { generateTelUrl } from "@/utils/contact";
 
 const settings = await getSettings();
 const phone = settings.phone;
-const phoneLink = `tel:${phone.replace(/\s/g, "")}`;
+const phoneLink = generateTelUrl(phone);
 ---
 
 <a
