@@ -30,7 +30,10 @@ const localBusinessSchema = generateLocalBusinessSchema(
         isSAB: settings.isSAB,
         foundingDate: settings.foundingDate,
         siteUrl: settings.siteUrl,
-        socialProfiles: { facebook: settings.facebook, instagram: settings.instagram },
+        socialProfiles: {
+            facebook: settings.facebook,
+            instagram: settings.instagram,
+        },
     },
     [],
     Astro.url.href,
@@ -170,6 +173,11 @@ const schema: WithContext<ContactPage> = {
                         action="/gracias"
                     >
                         <!-- Honeypot anti-spam -->
+                        <input
+                            type="hidden"
+                            name="form-name"
+                            value="contact-page"
+                        />
                         <p class="hidden">
                             <label>No llenar: <input name="bot-field" /></label>
                         </p>
