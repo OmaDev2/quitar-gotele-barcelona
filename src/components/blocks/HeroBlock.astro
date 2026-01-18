@@ -76,15 +76,18 @@ const phoneHref = generateTelUrl(phone);
                 />
             )
         }
-        {/* Gradiente estilo "Cine" para oscurecer y dar foco */}
+        {
+            /* Gradiente estilo "Cine" - Capa principal para mejorar legibilidad del texto */
+        }
         <div
-            class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent"
+            class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/70 via-30% to-transparent pointer-events-none"
             style="opacity: var(--hero-opacity)"
         >
         </div>
+        {/* Sombra inferior para una transición suave con el contenido */}
         <div
-            class="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent"
-            style="opacity: var(--hero-opacity)"
+            class="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent pointer-events-none"
+            style="opacity: calc(var(--hero-opacity) * 0.8)"
         >
         </div>
     </div>
@@ -121,7 +124,7 @@ const phoneHref = generateTelUrl(phone);
                                 {isIndustrial
                                     ? "Soluciones Industriales"
                                     : "Renueva Tu Espacio"}
-                                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary bg-[length:200%_auto] animate-shine mt-2">
+                                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-shine mt-2">
                                     en {locationName}
                                 </span>
                             </>

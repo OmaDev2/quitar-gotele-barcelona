@@ -92,9 +92,16 @@ const labelClasses =
         class="grid grid-cols-12 gap-4"
         method="POST"
         data-netlify="true"
+        netlify-honeypot="bot-field"
         name="contact"
         action={successUrl}
     >
+        <!-- Honeypot anti-spam (oculto para usuarios, visible para bots) -->
+        <p class="hidden">
+            <label>
+                No llenar este campo: <input name="bot-field" />
+            </label>
+        </p>
         {/* Generación Dinámica de Campos */}
         {
             formFields.map((field) => {
