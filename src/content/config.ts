@@ -45,6 +45,7 @@ const services = defineCollection({
         icon: z.string(),
         shortDesc: z.string(),
         featured: z.boolean().default(false),
+        relatedServices: z.array(z.string()).optional(), // Slugs de servicios relacionados
 
         // --- PAGE BUILDER: Define el orden de las secciones ---
         blocks: z.array(
@@ -69,6 +70,8 @@ const services = defineCollection({
                 z.object({ discriminant: z.literal('logos'), value: z.any() }),
                 z.object({ discriminant: z.literal('before_after'), value: z.any() }),
                 z.object({ discriminant: z.literal('service_areas'), value: z.any() }),
+                z.object({ discriminant: z.literal('service_locations'), value: z.any() }),
+                z.object({ discriminant: z.literal('related_services'), value: z.any() }),
             ])
         ).optional(), // Opcional para no romper servicios antiguos sin este campo
         faq: z.array(z.object({

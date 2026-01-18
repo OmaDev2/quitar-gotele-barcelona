@@ -29,6 +29,7 @@ interface Props {
     allLocations: Location[];
     testimonials: any[];
     blocks?: Block[];
+    relatedServices?: string[];
 
     pageTitle: string;
     pageDescription: string;
@@ -56,6 +57,7 @@ const {
     schema,
     mdxComponents = {},
     blocks,
+    relatedServices,
 } = Astro.props;
 
 // Orden por defecto para servicios antiguos
@@ -83,10 +85,13 @@ const finalBlocks = blocks && blocks.length > 0 ? blocks : defaultBlocks;
         content={Content}
         mdxComponents={mdxComponents}
         services={allServices}
+        allServices={allServices}
         faq={faq}
         allLocations={allLocations}
+        currentSlug={slug}
         whatsapp={whatsapp}
         isService={true}
+        relatedServices={relatedServices}
     />
 
     <WhatsAppButton />

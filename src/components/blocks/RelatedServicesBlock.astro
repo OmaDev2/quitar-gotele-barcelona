@@ -1,0 +1,112 @@
+---
+import { ArrowRight } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import type { Service } from "../../types";
+
+interface Props {
+    services: Service[];
+    currentSlug?: string;
+    relatedSlugs?: string[];
+    title?: string;
+    subtitle?: string;
+    bgClass?: string;
+    maxItems?: number;
+}
+
+const {
+    services = [],
+    currentSlug,
+    relatedSlugs,
+    title = "Servicios Relacionados",
+    subtitle = "Descubre otros servicios que pueden interesarte",
+    bgClass = "bg-secondary",
+    maxItems = 3,
+} = Astro.props;
+
+const cardBgClass = bgClass === "bg-secondary" ? "bg-surface/50" : "bg-secondary/50";
+
+// Determine which services to show
+let displayServices: Service[] = [];
+
+if (relatedSlugs && relatedSlugs.length > 0) {
+    // Show specific related services
+    displayServices = relatedSlugs
+        .map((slug) => services.find((s) => s.slug === slug))
+        .filter((s): s is Service => s !== undefined)
+        .slice(0, maxItems);
+} else {
+    // Show other services (excluding current)
+    displayServices = services
+        .filter((s) => s.slug !== currentSlug)
+        .slice(0, maxItems);
+}
+
+// Helper function to get icon component
+function getIconComponent(iconName: string): any {
+    const icons = LucideIcons as Record<string, any>;
+    // Try exact match first
+    if (icons[iconName]) return icons[iconName];
+    // Try PascalCase conversion (e.g., "paint-bucket" -> "PaintBucket")
+    const pascalCase = iconName
+        .split("-")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join("");
+    return icons[pascalCase] || icons["Wrench"];
+}
+---
+
+{displayServices.length > 0 && (
+    <section class={`py-20 ${bgClass} border-t border-heading/10`}>
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-heading mb-4">
+                    {title}
+                </h2>
+                <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-body max-w-2xl mx-auto">
+                    {subtitle}
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                {displayServices.map((service) => {
+                    const IconComponent = getIconComponent(service.data.icon);
+                    return (
+                        <a
+                            href={`/servicios/${service.slug}`}
+                            class={`group p-6 ${cardBgClass} rounded-xl border border-heading/10 hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20`}
+                        >
+                            <div class="flex items-start gap-4">
+                                <div class="p-3 bg-surface rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors shrink-0">
+                                    <IconComponent className="w-6 h-6" />
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-bold text-heading group-hover:text-primary transition-colors mb-2">
+                                        {service.data.title}
+                                    </h3>
+                                    <p class="text-sm text-body/80 line-clamp-2">
+                                        {service.data.shortDesc}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center text-primary text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span>Ver servicio</span>
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                            </div>
+                        </a>
+                    );
+                })}
+            </div>
+
+            <div class="mt-10 text-center">
+                <a
+                    href="/servicios/"
+                    class="inline-flex items-center gap-2 text-primary hover:text-accent font-bold transition-colors"
+                >
+                    Ver todos los servicios
+                    <ArrowRight className="w-5 h-5" />
+                </a>
+            </div>
+        </div>
+    </section>
+)}

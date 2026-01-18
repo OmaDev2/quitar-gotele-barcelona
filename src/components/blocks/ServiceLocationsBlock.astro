@@ -1,0 +1,84 @@
+---
+import { MapPin, ArrowRight } from "lucide-react";
+import type { Location } from "../../types";
+
+interface Props {
+    locations: Location[];
+    title?: string;
+    subtitle?: string;
+    serviceName?: string;
+    bgClass?: string;
+}
+
+const {
+    locations = [],
+    title,
+    subtitle,
+    serviceName,
+    bgClass = "bg-secondary",
+} = Astro.props;
+
+const cardBgClass = bgClass === "bg-secondary" ? "bg-surface/50" : "bg-secondary/50";
+
+// Default title includes service name if available
+const displayTitle = title || (serviceName
+    ? `Zonas donde ofrecemos ${serviceName}`
+    : "Zonas donde ofrecemos este servicio");
+
+const displaySubtitle = subtitle || "Nos desplazamos a todas estas localidades. Contacta con nosotros para solicitar presupuesto sin compromiso.";
+---
+
+<section class={`py-20 ${bgClass} border-t border-heading/10`}>
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-heading font-bold text-heading mb-4">
+                {displayTitle}
+            </h2>
+            <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+            <p class="text-body max-w-2xl mx-auto">
+                {displaySubtitle}
+            </p>
+        </div>
+
+        {locations.length > 0 ? (
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                {locations.map((loc) => (
+                    <a
+                        href={`/zona/${loc.slug}`}
+                        class={`group flex items-center p-4 ${cardBgClass} rounded-lg border border-heading/10 hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20`}
+                    >
+                        <div class="p-3 bg-surface rounded-full text-primary mr-4 group-hover:bg-primary group-hover:text-white transition-colors">
+                            <MapPin className="w-6 h-6" />
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-heading group-hover:text-primary transition-colors">
+                                {loc.data.name}
+                            </h3>
+                            <span class="text-xs text-body/70 uppercase tracking-wider">
+                                Ver detalles
+                            </span>
+                        </div>
+                        <ArrowRight className="w-5 h-5 text-body/50 ml-auto group-hover:text-primary transition-colors" />
+                    </a>
+                ))}
+            </div>
+        ) : (
+            <p class="text-center text-body/70">
+                Pronto tendremos disponibles las zonas de servicio.
+            </p>
+        )}
+
+        <div class="mt-12 text-center">
+            <p class="text-body/70 text-sm">
+                ¿No ves tu localidad?{" "}
+                <a
+                    href="/contacto/"
+                    class="text-primary hover:text-accent hover:underline font-bold"
+                >
+                    Contáctanos
+                </a>
+                , seguramente llegamos.
+            </p>
+        </div>
+    </div>
+</section>

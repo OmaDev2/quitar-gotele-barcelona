@@ -146,6 +146,16 @@ const schema: WithContext<CollectionPage> = {
         </div>
 
         <div class="container mx-auto px-4 relative z-10 space-y-32">
+            {/* Título principal de la sección */}
+            <div class="text-center">
+                <h2 class="text-4xl md:text-5xl font-black text-heading tracking-tight mb-4">
+                    Nuestras Zonas de Cobertura
+                </h2>
+                <p class="text-text/70 text-lg max-w-2xl mx-auto">
+                    Selecciona tu tipo de zona para ver las áreas donde ofrecemos servicio de {niche}.
+                </p>
+            </div>
+
             {/* Zonas Residenciales */}
             {
                 residenciales.length > 0 && (
@@ -160,9 +170,9 @@ const schema: WithContext<CollectionPage> = {
                                         Áreas del Hogar
                                     </span>
                                 </div>
-                                <h2 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
+                                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
                                     Zonas Residenciales
-                                </h2>
+                                </h3>
                             </div>
                             <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
                                 Despliegue rápido en barrios residenciales y
@@ -219,9 +229,9 @@ const schema: WithContext<CollectionPage> = {
                                         Polígonos y Naves
                                     </span>
                                 </div>
-                                <h2 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
+                                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
                                     Zonas Industriales
-                                </h2>
+                                </h3>
                             </div>
                             <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
                                 Equipos preparados para intervenciones en
@@ -278,9 +288,9 @@ const schema: WithContext<CollectionPage> = {
                                         Casco Urbano
                                     </span>
                                 </div>
-                                <h2 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
+                                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
                                     Centro y Distritos
-                                </h2>
+                                </h3>
                             </div>
                             <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
                                 Logística adaptada al centro de la ciudad.
@@ -343,11 +353,11 @@ const schema: WithContext<CollectionPage> = {
                         <Search className="w-8 h-8 text-heading" />
                     </div>
 
-                    <h3
+                    <h2
                         class="text-3xl md:text-5xl font-black text-heading mb-6 tracking-tight"
                     >
                         ¿No encuentras tu ubicación exacta?
-                    </h3>
+                    </h2>
                     <p
                         class="text-xl text-text/80 mb-10 leading-relaxed text-pretty"
                     >

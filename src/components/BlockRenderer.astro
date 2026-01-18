@@ -27,6 +27,8 @@ import PriceFromBlock from "./blocks/PriceFromBlock.astro";
 import ContentBlock from "./blocks/Content.astro";
 import ContentWithSidebar from "./blocks/ContentWithSidebar.astro";
 import ServiceAreas from "./blocks/ServiceAreas.astro";
+import ServiceLocationsBlock from "./blocks/ServiceLocationsBlock.astro";
+import RelatedServicesBlock from "./blocks/RelatedServicesBlock.astro";
 
 import type { Service, Location, Block, Coordinates, FAQItem } from "../types";
 
@@ -54,6 +56,7 @@ interface Props {
     isService?: boolean;
     isLocation?: boolean;
     config?: any; // Global settings
+    relatedServices?: string[]; // Slugs of related services
 }
 
 const {
@@ -80,6 +83,7 @@ const {
     isService,
     isLocation,
     config,
+    relatedServices,
 } = Astro.props;
 ---
 
@@ -369,6 +373,30 @@ const {
                         buttonText={value?.buttonText}
                         buttonLink={value?.buttonLink}
                         isOffer={value?.isOffer}
+                        bgClass={bgClass}
+                    />
+                );
+
+            case "service_locations":
+                return (
+                    <ServiceLocationsBlock
+                        locations={allLocations || []}
+                        title={value?.title}
+                        subtitle={value?.subtitle}
+                        serviceName={title}
+                        bgClass={bgClass}
+                    />
+                );
+
+            case "related_services":
+                return (
+                    <RelatedServicesBlock
+                        services={allServices || []}
+                        currentSlug={currentSlug}
+                        relatedSlugs={relatedServices}
+                        title={value?.title}
+                        subtitle={value?.subtitle}
+                        maxItems={value?.maxItems}
                         bgClass={bgClass}
                     />
                 );
