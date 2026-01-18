@@ -27,6 +27,10 @@ const localBusinessSchema = generateLocalBusinessSchema(
         description: `Información de contacto de ${siteName}, especialistas en ${niche}.`,
         areaServed: settings.areaServed,
         serviceRadius: settings.serviceRadius,
+        isSAB: settings.isSAB,
+        foundingDate: settings.foundingDate,
+        siteUrl: settings.siteUrl,
+        socialProfiles: { facebook: settings.facebook, instagram: settings.instagram },
     },
     [],
     Astro.url.href,
@@ -125,6 +129,7 @@ const schema: WithContext<ContactPage> = {
                             coordinates?.lat && coordinates?.lng ? (
                                 <iframe
                                     src={`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                                    title={`Ubicación de ${siteName} en Google Maps`}
                                     width="100%"
                                     height="100%"
                                     style="border:0;"
@@ -136,6 +141,7 @@ const schema: WithContext<ContactPage> = {
                             ) : (
                                 <iframe
                                     src={`https://www.google.com/maps?q=${encodeURIComponent(city)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                                    title={`Zona de servicio en ${city} - Google Maps`}
                                     width="100%"
                                     height="100%"
                                     style="border:0;"

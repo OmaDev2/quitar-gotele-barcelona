@@ -84,8 +84,8 @@ const localBusinessSchema = generateLocalBusinessSchema(
 		image: config.logo || `${config.siteUrl}/images/home/logo.png`,
 		businessType: config.businessType,
 		description: `${config.niche} en ${config.city}. Servicio profesional.`,
-		areaServed: config.areaServed, // Lista global de localidades
-		serviceRadius: config.serviceRadius, // Radio global
+		areaServed: config.areaServed,
+		serviceRadius: config.serviceRadius,
 		openingHours: config.openingHours,
 		paymentAccepted: config.paymentAccepted,
 		slogan: config.slogan,
@@ -94,6 +94,9 @@ const localBusinessSchema = generateLocalBusinessSchema(
 				? config.knowsAbout
 				: allServices.map((s) => s.data.title),
 		isSAB: config.isSAB,
+		foundingDate: config.foundingDate,
+		siteUrl: config.siteUrl,
+		socialProfiles: { facebook: config.facebook, instagram: config.instagram },
 	},
 	testimonialsCollection,
 	Astro.url.href,

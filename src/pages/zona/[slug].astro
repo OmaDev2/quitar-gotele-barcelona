@@ -66,12 +66,12 @@ const localSchema = generateLocalBusinessSchema(
     {
         siteName: `${settings.niche} en ${data.name} | ${settings.siteName}`,
         phone: settings.phone,
-        city: data.name, // Ciudad específica de la zona
-        address: undefined, // Usamos undefined para que use la ciudad como dirección en zonas locales
+        city: data.name,
+        address: undefined,
         coordinates: data.coordinates,
         image: data.heroImage,
         businessType: settings.businessType,
-        areaServed: data.name, // Dinámico para SEO local
+        areaServed: data.name,
         openingHours: settings.openingHours,
         paymentAccepted: settings.paymentAccepted,
         slogan: settings.slogan,
@@ -80,6 +80,9 @@ const localSchema = generateLocalBusinessSchema(
                 ? settings.knowsAbout
                 : allServices.map((s) => s.data.title),
         isSAB: settings.isSAB,
+        foundingDate: settings.foundingDate,
+        siteUrl: settings.siteUrl,
+        socialProfiles: { facebook: settings.facebook, instagram: settings.instagram },
     },
     testimonials,
     Astro.url.href,

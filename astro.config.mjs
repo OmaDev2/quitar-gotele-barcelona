@@ -41,11 +41,36 @@ export default defineConfig({
     mdx(),
     tailwind(),
     sitemap({
-      // Excluir páginas legales del sitemap
+      // Excluir páginas legales y admin del sitemap
       filter: (page) =>
         !page.includes('/aviso-legal') &&
         !page.includes('/privacidad') &&
-        !page.includes('/cookies')
+        !page.includes('/cookies') &&
+        !page.includes('/admin') &&
+        !page.includes('/gracias') &&
+        !page.includes('/404'),
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      serialize(item) {
+        // Prioridad alta para home y páginas principales
+        if (item.url === '/' || item.url.endsWith('/')) {
+          if (item.url === '/' || item.url === siteUrl + '/') {
+            item.priority = 1.0;
+            item.changefreq = 'daily';
+          } else if (item.url.includes('/zona/') || item.url.includes('/servicios/')) {
+            item.priority = 0.8;
+            item.changefreq = 'weekly';
+          } else if (item.url.includes('/contacto') || item.url.includes('/nosotros')) {
+            item.priority = 0.6;
+            item.changefreq = 'monthly';
+          } else if (item.url.includes('/blog')) {
+            item.priority = 0.7;
+            item.changefreq = 'weekly';
+          }
+        }
+        return item;
+      }
     }),
     robotsTxt(),
     partytown({

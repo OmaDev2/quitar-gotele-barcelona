@@ -85,11 +85,14 @@ interface LocalBusinessSettings {
     description?: string;
     areaServed?: any;
     serviceRadius?: number;
-    openingHours?: any[]; // Añadido
-    paymentAccepted?: string[]; // Añadido
-    knowsAbout?: string[]; // Añadido por SEO
-    slogan?: string; // Añadido
-    isSAB?: boolean; // Añadido
+    openingHours?: any[];
+    paymentAccepted?: string[];
+    knowsAbout?: string[];
+    slogan?: string;
+    isSAB?: boolean;
+    foundingDate?: string;
+    siteUrl?: string;
+    socialProfiles?: { facebook?: string; instagram?: string };
 }
 
 /**
@@ -127,6 +130,31 @@ export function formatAreaServed(areaData: any, radius?: number, coordinates?: {
 }
 
 /**
+ * Helper para expandir rangos de días (Mo-Fr → Mo,Tu,We,Th,Fr)
+ */
+function expandDayRange(dayStr: string): string {
+    const dayMap: Record<string, number> = {
+        'Mo': 0, 'Tu': 1, 'We': 2, 'Th': 3, 'Fr': 4, 'Sa': 5, 'Su': 6
+    };
+    const dayNames = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+    // Si contiene un rango (Mo-Fr)
+    if (dayStr.includes('-')) {
+        const [start, end] = dayStr.split('-');
+        const startIdx = dayMap[start];
+        const endIdx = dayMap[end];
+        if (startIdx !== undefined && endIdx !== undefined) {
+            const days: string[] = [];
+            for (let i = startIdx; i <= endIdx; i++) {
+                days.push(dayNames[i]);
+            }
+            return days.join(',');
+        }
+    }
+    return dayStr;
+}
+
+/**
  * Genera el esquema LocalBusiness mejorado
  */
 export function generateLocalBusinessSchema(
@@ -135,18 +163,19 @@ export function generateLocalBusinessSchema(
     url: string
 ): WithContext<LocalBusiness> {
     const aggregateRating = getAggregateRating(testimonials);
+    const baseUrl = settings.siteUrl || 'https://quitargotelebarcelona.es';
 
     const schema: any = {
         "@context": "https://schema.org",
         "@type": ["HomeAndConstructionBusiness", (settings.businessType || "HousePainter")],
         name: settings.siteName || "Negocio Local",
         image: settings.image?.startsWith("@assets")
-            ? "https://quitargotelebarcelona.es/images/logo.png"
-            : settings.image,
+            ? `${baseUrl}/images/logo.png`
+            : settings.image || `${baseUrl}/images/logo.png`,
         telephone: settings.phone,
         url: url,
         description: settings.description,
-        // SOLUCIÓN CORRECTA: Eliminar address completamente si es SAB (Service Area Business)
+        // Eliminar address completamente si es SAB (Service Area Business)
         ...(!settings.isSAB ? {
             address: {
                 "@type": "PostalAddress",
@@ -164,26 +193,35 @@ export function generateLocalBusinessSchema(
         schema.slogan = settings.slogan;
     }
 
+    // Año de fundación
+    if (settings.foundingDate) {
+        schema.foundingDate = settings.foundingDate;
+    }
+
     if (settings.paymentAccepted && settings.paymentAccepted.length > 0) {
         schema.paymentAccepted = settings.paymentAccepted.join(", ");
     }
 
     if (settings.openingHours && settings.openingHours.length > 0) {
-        // Formato Schema: "Mo-Fr 09:00-18:00"
+        // Formato Schema.org correcto: expandir rangos de días
         schema.openingHours = settings.openingHours.map(h => {
-            const days = Array.isArray(h.dayOfWeek) ? h.dayOfWeek.join(",") : h.dayOfWeek;
+            const days = Array.isArray(h.dayOfWeek)
+                ? h.dayOfWeek.map((d: string) => expandDayRange(d)).join(',')
+                : expandDayRange(h.dayOfWeek);
             return `${days} ${h.opens}-${h.closes}`;
         });
     }
 
-    // Campo CRÍTICO: Indica de qué somos expertos
+    // Campo para relevancia semántica
     if (settings.knowsAbout && settings.knowsAbout.length > 0) {
-        (schema as any).knowsAbout = settings.knowsAbout;
+        schema.knowsAbout = settings.knowsAbout;
     }
 
-    // if (aggregateRating) {
-    //     schema.aggregateRating = aggregateRating;
-    // }
+    // Rating agregado de testimonios
+    if (aggregateRating && testimonials.length >= 1) {
+        schema.aggregateRating = aggregateRating;
+    }
+
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
         schema.geo = {
             "@type": "GeoCoordinates",
@@ -199,6 +237,18 @@ export function generateLocalBusinessSchema(
             settings.serviceRadius,
             settings.coordinates
         );
+    }
+
+    // Perfiles sociales para E-E-A-T
+    const sameAs: string[] = [];
+    if (settings.socialProfiles?.facebook && settings.socialProfiles.facebook !== 'https://facebook.com') {
+        sameAs.push(settings.socialProfiles.facebook);
+    }
+    if (settings.socialProfiles?.instagram && settings.socialProfiles.instagram !== 'https://instagram.com') {
+        sameAs.push(settings.socialProfiles.instagram);
+    }
+    if (sameAs.length > 0) {
+        schema.sameAs = sameAs;
     }
 
     return schema;
