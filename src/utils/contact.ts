@@ -24,7 +24,8 @@ export function generateWhatsAppUrl(phone: string | undefined | null, message: s
         finalPhone = "34" + finalPhone;
     }
 
-    const url = new URL(`https://wa.me/${finalPhone}`);
+    const url = new URL("https://api.whatsapp.com/send");
+    url.searchParams.set("phone", finalPhone);
     if (message) {
         url.searchParams.set("text", message);
     }
