@@ -1,22 +1,24 @@
 # Quitar Gotelé Barcelona - Especialistas en Alisado de Paredes
 
-## Descripción
-Quitar Gotelé Barcelona es una empresa especializada en eliminar gotelé y pintura profesional en Barcelona y área metropolitana. Ofrecemos servicio de alisado de paredes con acabados lisos y modernos, sin obras y con garantía de satisfacción.
+> Especialistas en eliminar gotelé y pintura profesional en Barcelona y área metropolitana. Alisado de paredes con acabados modernos y garantía de satisfacción.
 
 ## Servicios Principales
-- **Quitar Gotelé:** Eliminación profesional de gotelé con diferentes técnicas (lijado, emplastecido, alisado).
-- **Pintura Interior:** Pintura de paredes y techos con acabados de calidad.
-- **Alisado de Paredes:** Paredes lisas y preparadas para cualquier acabado decorativo.
-- **Reparación de Desperfectos:** Arreglo de grietas, humedades y preparación de superficies.
+- **Quitar Gotelé:** Eliminación profesional de gotelé mediante lijado, emplastecido y alisado.
+- **Pintura Interior:** Pintura de paredes y techos con acabados de alta calidad.
+- **Alisado de Paredes:** Preparación de superficies para acabados lisos y decorativos.
+- **Reparación de Desperfectos:** Tratamiento de grietas, humedades y preparación previa.
 
 ## Información de Contacto
 - **Teléfono/WhatsApp:** +34 644 371 602
 - **Email:** presupuestos@quitargotelebarcelona.es
 - **Horario:** Lun-Vie 9:00-18:00, Sáb 10:00-14:00
-- **Zona de Servicio:** Barcelona, Badalona, Cornellà, L'Hospitalet, Mataró, Sabadell, Sant Boi, Sant Cugat.
+- **Zona de Servicio:** Barcelona, Badalona, Cornellà, L'Hospitalet, Mataró, Sabadell, Sant Boi, Sant Cugat, Terrassa, Santa Coloma de Gramenet.
 
 ## Navegación del Sitio
-- Inicio: https://quitargotelebarcelona.es/
-- Contacto: https://quitargotelebarcelona.es/contacto
-- Zonas: https://quitargotelebarcelona.es/zonas
-- Blog: https://quitargotelebarcelona.es/blog
+- [Inicio](https://quitargotelebarcelona.es/)
+- [Contacto](https://quitargotelebarcelona.es/contacto)
+- [Zonas de Servicio](https://quitargotelebarcelona.es/zonas)
+- [Blog de Consejos](https://quitargotelebarcelona.es/blog)
+
+## Sitemap
+- [Sitemap XML](https://quitargotelebarcelona.es/sitemap-index.xml)
