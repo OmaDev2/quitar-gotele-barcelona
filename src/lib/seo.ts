@@ -276,7 +276,7 @@ export function generateLocalBusinessSchema(
     if (settings.socialProfiles?.facebook && settings.socialProfiles.facebook !== 'https://facebook.com') {
         sameAs.push(settings.socialProfiles.facebook);
     }
-    if (settings.socialProfiles?.instagram && settings.socialProfiles.instagram !== 'https://instagram.com') {
+    if (settings.socialProfiles?.instagram && settings.socialProfiles.instagram !== 'https://www.instagram.com') {
         sameAs.push(settings.socialProfiles.instagram);
     }
     if (sameAs.length > 0) {

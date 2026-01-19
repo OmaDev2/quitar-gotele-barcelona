@@ -131,7 +131,7 @@ const schema: WithContext<ContactPage> = {
                         {
                             coordinates?.lat && coordinates?.lng ? (
                                 <iframe
-                                    src={`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                                    src={`https://maps.google.com/maps?q=${coordinates.lat},${coordinates.lng}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                                     title={`Ubicación de ${siteName} en Google Maps`}
                                     width="100%"
                                     height="100%"
@@ -143,7 +143,7 @@ const schema: WithContext<ContactPage> = {
                                 />
                             ) : (
                                 <iframe
-                                    src={`https://www.google.com/maps?q=${encodeURIComponent(city)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                                    src={`https://maps.google.com/maps?q=${encodeURIComponent(city)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                                     title={`Zona de servicio en ${city} - Google Maps`}
                                     width="100%"
                                     height="100%"
