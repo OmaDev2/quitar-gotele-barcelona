@@ -81,7 +81,7 @@ Para ejercer estos derechos, envíe un correo electrónico a **olga.millan@gmail
 
 Responderemos en el plazo máximo de un mes.
 
-Si considera que sus derechos no han sido debidamente atendidos, puede presentar reclamación ante la Agencia Española de Protección de Datos ([www.aepd.es](http://www.aepd.es)).
+Si considera que sus derechos no han sido debidamente atendidos, puede presentar reclamación ante la Agencia Española de Protección de Datos ([www.aepd.es](https://www.aepd.es)).
 
 ## 2.8. Procedencia de los Datos
 
