@@ -29,7 +29,7 @@ export default defineConfig({
 
   // 🔗 Trailing slash: siempre con barra al final (bueno para SEO)
   // 🔗 Trailing slash: Ignoramos para evitar conflictos con Keystatic admin
-  trailingSlash: 'ignore',
+  trailingSlash: 'always',
 
   image: {
     domains: ["images.unsplash.com"],
@@ -37,7 +37,9 @@ export default defineConfig({
 
   integrations: [
     react(),
-    keystatic(),
+    keystatic({
+      disableAutomaticRoutes: true,
+    }),
     mdx(),
     tailwind(),
     sitemap({
