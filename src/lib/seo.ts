@@ -170,8 +170,8 @@ export function generateLocalBusinessSchema(
         "@type": ["HomeAndConstructionBusiness", (settings.businessType || "HousePainter")],
         name: settings.siteName || "Negocio Local",
         image: settings.image?.startsWith("@assets")
-            ? `${baseUrl}/images/logo.png`
-            : settings.image || `${baseUrl}/images/logo.png`,
+            ? `${baseUrl}/images/logo.webp`
+            : settings.image || `${baseUrl}/images/logo.webp`,
         telephone: settings.phone,
         url: url,
         description: settings.description,
