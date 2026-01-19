@@ -10,28 +10,28 @@ async function optimizeImages() {
         {
             path: 'public/images/home/blocks/0/value/backgroundImage.webp',
             width: 1920,
-            quality: 75, // Lower quality for background
+            quality: 70, // Aggressive compression for background
             fit: 'cover'
         },
         {
             path: 'public/images/services/blocks/2/value/items/0/image.webp',
-            width: 700, // Reduced from 994 to ~700 (displayed at ~697)
-            quality: 80
+            width: 700,
+            quality: 75
         },
         {
             path: 'public/images/services/blocks/2/value/items/1/image.webp',
             width: 700,
-            quality: 80
+            quality: 75
         },
         {
             path: 'public/images/services/blocks/2/value/items/2/image.webp',
             width: 700,
-            quality: 80
+            quality: 75
         },
         {
             path: 'public/images/services/blocks/2/value/items/3/image.webp',
             width: 700,
-            quality: 80
+            quality: 75
         }
     ];
 
