@@ -72,13 +72,27 @@ export default defineConfig({
         return item;
       }
     }),
-    robotsTxt(),
+    robotsTxt({
+      sitemap: siteUrl + '/sitemap-index.xml',
+      policy: [
+        {
+          userAgent: '*',
+          allow: '/',
+          disallow: ['/admin', '/gracias', '/404'],
+        },
+      ],
+    }),
     partytown({
       config: {
         forward: ["dataLayer.push"],
       },
     })
   ],
+
+  // 🚀 OPTIMIZACIÓN DE RENDIMIENTO
+  build: {
+    inlineStylesheets: 'always', // Elimina archivos CSS externos que bloquean el renderizado (FCP/LCP)
+  },
 
   // ✅ MODO SERVER: Necesario para Keystatic y API routes
   output: 'server',

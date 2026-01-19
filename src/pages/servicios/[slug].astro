@@ -82,7 +82,10 @@ const serviceSchema: WithContext<Service> = {
             isSAB: settings.isSAB,
             foundingDate: settings.foundingDate,
             siteUrl: settings.siteUrl,
-            socialProfiles: { facebook: settings.facebook, instagram: settings.instagram },
+            socialProfiles: {
+                facebook: settings.facebook,
+                instagram: settings.instagram,
+            },
         },
         testimonials,
         Astro.url.href,
@@ -95,7 +98,7 @@ const serviceSchema: WithContext<Service> = {
         "@type": "City",
         name: settings.city,
     },
-    // ...(aggregateRating && { aggregateRating }), // También a nivel de servicio
+    ...(aggregateRating && { aggregateRating }), // También a nivel de servicio
 };
 
 const breadcrumbsPoints = [

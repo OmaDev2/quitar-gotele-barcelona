@@ -130,15 +130,26 @@ const heroOpacity = settings.heroOverlayOpacity ?? 0.6;
         <meta name="generator" content={Astro.generator} />
 
         {/* --- DNS PREFETCH PARA DOMINIOS DE TERCEROS --- */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://www.google.com" />
         <link rel="dns-prefetch" href="https://maps.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* --- CARGA DINÁMICA DE FUENTES DE GOOGLE --- */}
+        {/* --- CARGA OPTIMIZADA DE FUENTES DE GOOGLE --- */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href={`${activeFont.googleFontsUrl}`} rel="stylesheet" />
+        <link rel="preload" as="style" href={`${activeFont.googleFontsUrl}`} />
+        <link
+            href={`${activeFont.googleFontsUrl}`}
+            rel="stylesheet"
+            media="print"
+            onload="this.media='all'"
+        />
+        <noscript>
+            <link href={`${activeFont.googleFontsUrl}`} rel="stylesheet" />
+        </noscript>
 
         <SeoHead
             title={title}

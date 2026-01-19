@@ -155,6 +155,32 @@ function expandDayRange(dayStr: string): string {
 }
 
 /**
+ * Genera la lista de Reviews individuales para Schema.org
+ */
+export function generateReviewsList(testimonials: any[]): any[] {
+    if (!testimonials || testimonials.length === 0) return [];
+
+    return testimonials.map(t => {
+        const item = t.data || t;
+        return {
+            "@type": "Review",
+            "author": {
+                "@type": "Person",
+                "name": item.author || item.name || "Cliente Satisfecho"
+            },
+            "datePublished": item.date || new Date().toISOString().split('T')[0],
+            "reviewBody": item.content || item.text || "",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": item.rating || 5,
+                "bestRating": "5",
+                "worstRating": "1"
+            }
+        };
+    });
+}
+
+/**
  * Genera el esquema LocalBusiness mejorado
  */
 export function generateLocalBusinessSchema(
@@ -163,6 +189,7 @@ export function generateLocalBusinessSchema(
     url: string
 ): WithContext<LocalBusiness> {
     const aggregateRating = getAggregateRating(testimonials);
+    const reviews = generateReviewsList(testimonials);
     const baseUrl = settings.siteUrl || 'https://quitargotelebarcelona.es';
 
     const schema: any = {
@@ -220,6 +247,11 @@ export function generateLocalBusinessSchema(
     // Rating agregado de testimonios
     if (aggregateRating && testimonials.length >= 1) {
         schema.aggregateRating = aggregateRating;
+    }
+
+    // Reviews individuales
+    if (reviews.length > 0) {
+        schema.review = reviews;
     }
 
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
