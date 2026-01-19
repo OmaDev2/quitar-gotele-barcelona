@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import SearchConsoleVerification from "../components/SearchConsoleVerification.astro";
+import FontLoader from "../components/FontLoader.astro";
 import "../styles/global.css";
 import type { WithContext, Thing } from "schema-dts";
 
@@ -85,6 +86,7 @@ interface Props {
     noindex?: boolean;
     stickyPhone?: boolean;
     whatsappFloat?: boolean;
+    preloadImage?: string;
 }
 
 const {
@@ -94,6 +96,7 @@ const {
     noindex = false,
     stickyPhone = true,
     whatsappFloat = true,
+    preloadImage,
 } = Astro.props;
 
 // Generar descripción por defecto si no viene en props
@@ -138,18 +141,8 @@ const heroOpacity = settings.heroOverlayOpacity ?? 0.6;
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
         {/* --- CARGA OPTIMIZADA DE FUENTES DE GOOGLE --- */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preload" as="style" href={`${activeFont.googleFontsUrl}`} />
-        <link
-            href={`${activeFont.googleFontsUrl}`}
-            rel="stylesheet"
-            media="print"
-            onload="this.media='all'"
-        />
-        <noscript>
-            <link href={`${activeFont.googleFontsUrl}`} rel="stylesheet" />
-        </noscript>
+        {/* --- CARGA OPTIMIZADA DE FUENTES (FONTSOURCE) --- */}
+        <FontLoader pair={settings.fontPair} />
 
         <SeoHead
             title={title}

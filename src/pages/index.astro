@@ -96,7 +96,10 @@ const localBusinessSchema = generateLocalBusinessSchema(
 		isSAB: config.isSAB,
 		foundingDate: config.foundingDate,
 		siteUrl: config.siteUrl,
-		socialProfiles: { facebook: config.facebook, instagram: config.instagram },
+		socialProfiles: {
+			facebook: config.facebook,
+			instagram: config.instagram,
+		},
 	},
 	testimonialsCollection,
 	Astro.url.href,
@@ -119,6 +122,7 @@ const schema = [localBusinessSchema, ...(faqSchema ? [faqSchema] : [])] as any;
 	schema={schema}
 	stickyPhone={homeData.stickyPhone}
 	whatsappFloat={homeData.whatsappFloat}
+	preloadImage="/images/home/blocks/0/value/backgroundImage.webp"
 >
 	<BlockRenderer
 		blocks={finalBlocks}
