@@ -93,11 +93,11 @@ export default defineConfig({
 
   // 🚀 OPTIMIZACIÓN DE RENDIMIENTO
   build: {
-    inlineStylesheets: 'auto', // Cambiado a 'auto' para evitar advertencia de "Unused CSS" y permitir caché del navegador
+    inlineStylesheets: 'always', // Cambiado a 'auto' para evitar advertencia de "Unused CSS" y permitir caché del navegador
   },
 
   // ✅ MODO SERVER: Necesario para Keystatic y API routes
-  output: 'server',
+  output: 'static',
   adapter: netlify(),
 
   vite: {
