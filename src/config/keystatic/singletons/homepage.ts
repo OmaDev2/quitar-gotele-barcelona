@@ -252,6 +252,11 @@ export const homepage = singleton({
                                 label: 'Contenido (Markdown)',
                                 multiline: true,
                             }),
+                            readMore: fields.checkbox({
+                                label: 'Activar "Leer más"',
+                                description: 'Colapsa el contenido largo con un botón para expandir',
+                                defaultValue: false
+                            }),
                         }),
                         { label: 'Secciones de Contenido', itemLabel: (p) => p.fields.heading.value || 'Sección' }
                     ),

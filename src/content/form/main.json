@@ -2,7 +2,7 @@
     "title": "Solicita Presupuesto Gratis",
     "subtitle": "Respuesta rápida en tu zona",
     "submitText": "Enviar Solicitud",
-    "successUrl": "/gracias",
+    "successUrl": "/gracias/",
     "formFields": [
         {
             "label": "Nombre",

@@ -6,6 +6,7 @@ interface Props {
     sections?: {
         heading: string;
         content: string;
+        readMore?: boolean;
     }[];
     bgClass?: string;
 }
@@ -35,7 +36,7 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
 
                         <div class="p-6 md:p-10">
                             {/* Header de la sección */}
-                            <div class="flex items-start gap-4 mb-8">
+                            <div class="flex items-start gap-4 mb-4">
                                 {/* Badge numérico con colores del tema */}
                                 <div class="hidden md:flex w-12 h-12 bg-primary/10 rounded-xl items-center justify-center flex-shrink-0 border-2 border-primary/20">
                                     <span class="text-xl font-bold text-primary">
@@ -44,7 +45,7 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
                                 </div>
 
                                 {/* Título */}
-                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-heading flex-1 leading-tight">
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-heading flex-1 leading-tight self-center">
                                     {section.heading || section.title}
                                 </h3>
                             </div>
@@ -52,71 +53,94 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
                             {/* Contenido - ADAPTADO A TU SISTEMA DE COLORES */}
                             {section.content && (
                                 <div
-                                    class="prose prose-lg max-w-none
-                                
-                                prose-headings:font-heading prose-headings:font-bold prose-headings:text-heading 
-                                prose-headings:mt-8 prose-headings:mb-4
-                                prose-h3:text-2xl prose-h3:border-b prose-h3:border-heading/10 prose-h3:pb-3
-                                prose-h4:text-xl prose-h4:text-heading/90
-                                
-                                prose-p:text-body prose-p:leading-relaxed prose-p:mb-6 
-                                prose-p:text-base md:prose-p:text-lg
-                                
-                                prose-strong:text-heading prose-strong:font-bold
-                                prose-em:text-heading/90 prose-em:italic
-                                
-                                prose-ul:my-6 prose-ul:space-y-2
-                                prose-ol:my-6 prose-ol:space-y-2
-                                prose-li:text-body prose-li:leading-relaxed
-                                prose-li:marker:text-primary prose-li:marker:font-bold
-                                
-                                prose-table:border-collapse prose-table:w-full prose-table:my-8 
-                                prose-table:shadow-sm prose-table:rounded-lg prose-table:overflow-hidden
-                                prose-table:bg-surface
-                                
-                                prose-thead:bg-primary/10
-                                prose-th:font-bold prose-th:text-heading 
-                                prose-th:px-6 prose-th:py-4 prose-th:text-left 
-                                prose-th:border-b-2 prose-th:border-primary/40
-                                
-                                prose-td:px-6 prose-td:py-4 
-                                prose-td:border-b prose-td:border-heading/10 
-                                prose-td:text-body
-                                
-                                prose-tr:transition-colors 
-                                prose-tr:hover:bg-primary/5
-                                
-                                prose-a:text-primary prose-a:font-medium 
-                                prose-a:no-underline prose-a:border-b-2 prose-a:border-primary/30 
-                                hover:prose-a:border-accent hover:prose-a:text-accent 
-                                prose-a:transition-all prose-a:duration-300
-                                
-                                prose-blockquote:border-l-4 prose-blockquote:border-primary 
-                                prose-blockquote:bg-primary/5 
-                                prose-blockquote:pl-6 prose-blockquote:py-4 
-                                prose-blockquote:my-8 prose-blockquote:rounded-r-lg
-                                prose-blockquote:text-body prose-blockquote:italic
-                                
-                                prose-code:bg-heading/5 prose-code:text-primary 
-                                prose-code:px-2 prose-code:py-1 
-                                prose-code:rounded prose-code:text-sm 
-                                prose-code:font-mono prose-code:border prose-code:border-heading/10
-                                
-                                prose-code:bg-heading/5 prose-code:text-primary 
-                                prose-code:px-2 prose-code:py-1 
-                                prose-code:rounded prose-code:text-sm 
-                                prose-code:font-mono prose-code:border prose-code:border-heading/10
-                                
-                                prose-pre:bg-heading/95 prose-pre:text-surface 
-                                prose-pre:p-6 prose-pre:rounded-xl 
-                                prose-pre:overflow-x-auto prose-pre:shadow-lg
-                                
-                                prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8
-                                prose-img:border prose-img:border-heading/10
-                                
-                                prose-hr:border-heading/20 prose-hr:my-12"
-                                    set:html={marked.parse(section.content)}
-                                />
+                                    class="read-more-container relative group"
+                                    data-state="collapsed"
+                                >
+                                    <div
+                                        class={`read-more-content prose prose-lg max-w-none transition-all duration-700 ease-in-out overflow-hidden
+                                        ${section.readMore === true || section.readMore === "true" ? "max-h-[400px]" : "max-h-none"}
+                                        prose-headings:font-heading prose-headings:font-bold prose-headings:text-heading 
+                                        prose-headings:mt-8 prose-headings:mb-4
+                                        prose-h3:text-2xl prose-h3:border-b prose-h3:border-heading/10 prose-h3:pb-3
+                                        prose-h4:text-xl prose-h4:text-heading/90
+                                        
+                                        prose-p:text-body prose-p:leading-relaxed prose-p:mb-6 
+                                        prose-p:text-base md:prose-p:text-lg
+                                        
+                                        prose-strong:text-heading prose-strong:font-bold
+                                        prose-em:text-heading/90 prose-em:italic
+                                        
+                                        prose-ul:my-6 prose-ul:space-y-2
+                                        prose-ol:my-6 prose-ol:space-y-2
+                                        prose-li:text-body prose-li:leading-relaxed
+                                        prose-li:marker:text-primary prose-li:marker:font-bold
+                                        
+                                        prose-table:border-collapse prose-table:w-full prose-table:my-8 
+                                        prose-table:shadow-sm prose-table:rounded-lg prose-table:overflow-hidden
+                                        prose-table:bg-surface
+                                        
+                                        prose-thead:bg-primary/10
+                                        prose-th:font-bold prose-th:text-heading 
+                                        prose-th:px-6 prose-th:py-4 prose-th:text-left 
+                                        prose-th:border-b-2 prose-th:border-primary/40
+                                        
+                                        prose-td:px-6 prose-td:py-4 
+                                        prose-td:border-b prose-td:border-heading/10 
+                                        prose-td:text-body
+                                        
+                                        prose-tr:transition-colors 
+                                        prose-tr:hover:bg-primary/5
+                                        
+                                        prose-a:text-primary prose-a:font-medium 
+                                        prose-a:no-underline prose-a:border-b-2 prose-a:border-primary/30 
+                                        hover:prose-a:border-accent hover:prose-a:text-accent 
+                                        prose-a:transition-all prose-a:duration-300
+                                        
+                                        prose-blockquote:border-l-4 prose-blockquote:border-primary 
+                                        prose-blockquote:bg-primary/5 
+                                        prose-blockquote:pl-6 prose-blockquote:py-4 
+                                        prose-blockquote:my-8 prose-blockquote:rounded-r-lg
+                                        prose-blockquote:text-body prose-blockquote:italic
+                                        
+                                        prose-code:bg-heading/5 prose-code:text-primary 
+                                        prose-code:px-2 prose-code:py-1 
+                                        prose-code:rounded prose-code:text-sm 
+                                        prose-code:font-mono prose-code:border prose-code:border-heading/10
+                                        
+                                        prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8
+                                        prose-img:border prose-img:border-heading/10
+                                        
+                                        prose-hr:border-heading/20 prose-hr:my-12`}
+                                        data-readmore={String(section.readMore)}
+                                        set:html={marked.parse(section.content)}
+                                    />
+
+                                    {section.readMore && (
+                                        <>
+                                            <div class="read-more-overlay absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent transition-opacity duration-500 pointer-events-none" />
+                                            <div class="relative z-10 text-center -mt-6">
+                                                <button class="read-more-btn inline-flex items-center gap-2 bg-white border border-primary/20 text-primary px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-primary hover:text-white transition-all duration-300 transform active:scale-95 group">
+                                                    <span class="btn-text">
+                                                        Leer más detalladamente
+                                                    </span>
+                                                    <svg
+                                                        class="w-4 h-4 transition-transform duration-300 group-data-[expanded]:rotate-180"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 9l-7 7-7-7"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             )}
                         </div>
                     </article>
@@ -131,7 +155,7 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
             </p>
             <a
                 href="/contacto/"
-                class="inline-flex items-center gap-3 bg-primary text-surface px-8 py-4 rounded-xl font-heading font-bold hover:bg-accent transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl font-heading font-bold hover:bg-accent transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
                 <span>Solicitar Presupuesto Gratis</span>
                 <svg
@@ -151,6 +175,63 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
     </div>
 </section>
 
+<script>
+    function setupReadMore() {
+        const containers = document.querySelectorAll(".read-more-container");
+
+        containers.forEach((container) => {
+            const btn = container.querySelector(".read-more-btn");
+            const content = container.querySelector(
+                ".read-more-content",
+            ) as HTMLElement;
+            const overlay = container.querySelector(
+                ".read-more-overlay",
+            ) as HTMLElement;
+            const btnText = container.querySelector(".btn-text");
+            const svg = container.querySelector(
+                "svg",
+            ) as unknown as SVGSVGElement;
+
+            if (!btn || !content) return;
+
+            btn.addEventListener("click", () => {
+                const isCollapsed =
+                    container.getAttribute("data-state") === "collapsed";
+
+                if (isCollapsed) {
+                    // Expand
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    container.setAttribute("data-state", "expanded");
+                    if (btnText) btnText.textContent = "Mostrar menos";
+                    if (overlay) overlay.style.opacity = "0";
+                    if (svg) svg.style.transform = "rotate(180deg)";
+                } else {
+                    // Collapse
+                    content.style.maxHeight = "400px";
+                    container.setAttribute("data-state", "collapsed");
+                    if (btnText)
+                        btnText.textContent = "Leer más detalladamente";
+                    if (overlay) overlay.style.opacity = "1";
+                    if (svg) svg.style.transform = "rotate(0deg)";
+
+                    // Optional: scroll back to the heading
+                    const rect = container.getBoundingClientRect();
+                    if (rect.top < 0) {
+                        container.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    // Initialize on load and after view transitions
+    setupReadMore();
+    document.addEventListener("astro:after-swap", setupReadMore);
+</script>
+
 <style>
     /* Animación reveal opcional */
     .reveal-on-scroll {
@@ -165,5 +246,16 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
 
     .reveal-on-scroll:nth-child(3) {
         animation-delay: 0.2s;
+    }
+
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>

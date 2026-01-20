@@ -80,7 +80,7 @@ export default defineConfig({
         {
           userAgent: '*',
           allow: '/',
-          disallow: ['/admin', '/gracias', '/404'],
+          disallow: ['/admin/', '/gracias/', '/404/'],
         },
       ],
     }),

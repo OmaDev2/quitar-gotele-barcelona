@@ -1,4 +1,6 @@
 ---
+import { marked } from "marked";
+
 interface Props {
     process: {
         title?: string;
@@ -29,7 +31,7 @@ const cardBgClass = bgClass === "bg-secondary" ? "bg-surface" : "bg-secondary";
                     )}
                     <div class="w-24 h-1 bg-primary mx-auto mb-6" />
                     {process.description && (
-                        <p class="text-body text-lg">{process.description}</p>
+                        <p class="text-body text-lg" set:html={marked.parseInline(process.description)} />
                     )}
                 </div>
 
@@ -48,12 +50,8 @@ const cardBgClass = bgClass === "bg-secondary" ? "bg-surface" : "bg-secondary";
                                         class={`${cardBgClass} p-8 rounded-2xl shadow-lg border border-heading/5 relative hover:-translate-y-1 transition-transform duration-300 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}
                                     >
                                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent rounded-t-2xl opacity-50" />
-                                        <h3 class="text-2xl font-bold text-heading mb-3">
-                                            {step.title || (step as any).name}
-                                        </h3>
-                                        <p class="text-body leading-relaxed">
-                                            {step.description}
-                                        </p>
+                                        <h3 class="text-2xl font-bold text-heading mb-3" set:html={marked.parseInline(step.title || (step as any).name || '')} />
+                                        <p class="text-body leading-relaxed" set:html={marked.parseInline(step.description || '')} />
                                     </div>
                                 </div>
 
