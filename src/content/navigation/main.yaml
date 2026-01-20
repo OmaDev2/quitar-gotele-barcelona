@@ -2,8 +2,6 @@ menuItems:
   - label: "Inicio"
     url: "/"
     type: link
-  - label: "Servicios"
-    type: services_dropdown
   - label: "Zonas"
     type: locations_dropdown
   - label: "Nosotros"
