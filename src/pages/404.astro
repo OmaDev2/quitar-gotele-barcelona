@@ -13,9 +13,9 @@ const { siteName, phone, niche } = business?.data || {
     niche: "Servicio",
 };
 
-// Recuperamos servicios reales para sugerir (evita enlaces rotos)
-const services = await getCollection("services");
-const suggestedServices = services.slice(0, 4); // Mostramos los 4 primeros
+// Recuperamos zonas para sugerir
+const locations = await getCollection("locations");
+const suggestedLocations = locations.slice(0, 4);
 ---
 
 <Layout
@@ -71,20 +71,19 @@ const suggestedServices = services.slice(0, 4); // Mostramos los 4 primeros
                 </div>
 
                 {
-                    suggestedServices.length > 0 && (
+                    suggestedLocations.length > 0 && (
                         <div class="bg-surface/50 border border-heading/10 rounded-xl p-8 backdrop-blur-sm">
                             <h3 class="text-xl font-bold text-heading mb-6">
-                                ¿Buscabas alguno de nuestros servicios de{" "}
-                                {niche}?
+                                ¿Buscabas {niche} en alguna de estas zonas?
                             </h3>
                             <div class="grid sm:grid-cols-2 gap-4">
-                                {suggestedServices.map((service) => (
+                                {suggestedLocations.map((location) => (
                                     <a
-                                        href={`/servicios/${service.slug}/`}
+                                        href={`/zona/${location.slug}/`}
                                         class="flex items-center justify-between p-4 bg-surface border border-heading/5 rounded-lg hover:border-primary/50 transition-colors group text-left"
                                     >
                                         <span class="text-body group-hover:text-primary transition-colors font-medium">
-                                            {service.data.title}
+                                            {location.data.name}
                                         </span>
                                         <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
                                     </a>
