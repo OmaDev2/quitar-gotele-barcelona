@@ -16,6 +16,8 @@ interface Props {
     locationType: "residencial" | "industrial" | "centro";
     zipCodes?: string[];
     heroImage?: string;
+    heroTitle?: string;
+    heroSubtitle?: string;
     coordinates?: Coordinates;
     faq?: FAQItem[];
     content: any; // Astro component derived type
@@ -97,6 +99,8 @@ const finalBlocks =
                     locationType={props.locationType}
                     zipCodes={props.zipCodes}
                     heroImage={props.heroImage}
+                    heroTitle={props.heroTitle}
+                    heroSubtitle={props.heroSubtitle}
                     phone={phone}
                     siteName={siteName}
                     niche={niche}

@@ -38,6 +38,8 @@ interface Props {
     locationType?: "residencial" | "industrial" | "centro";
     zipCodes?: string[];
     heroImage?: string;
+    heroTitle?: string;
+    heroSubtitle?: string;
     phone?: string;
     siteName?: string;
     niche?: string;
@@ -65,6 +67,8 @@ const {
     locationType,
     zipCodes,
     heroImage,
+    heroTitle,
+    heroSubtitle,
     phone,
     siteName,
     niche,
@@ -115,8 +119,8 @@ const {
                             phone={phone}
                             siteName={siteName}
                             niche={niche}
-                            title={value?.title || title}
-                            subtitle={value?.subtitle}
+                            title={value?.title || heroTitle || title}
+                            subtitle={value?.subtitle || heroSubtitle}
                         />
                     </div>
                 );

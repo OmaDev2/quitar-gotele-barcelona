@@ -7,6 +7,8 @@ const locations = defineCollection({
         type: z.enum(['residencial', 'industrial', 'centro']),
         seoTitle: z.string(),
         seoDesc: z.string(),
+        heroTitle: z.string().optional(),
+        heroSubtitle: z.string().optional(),
         heroImage: z.string().optional(),
         coordinates: z.object({
             lat: z.string().optional(),
