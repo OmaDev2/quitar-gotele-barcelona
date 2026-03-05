@@ -10,6 +10,7 @@ import {
     TreePine,
     MapPin,
 } from "lucide-react";
+import { getCollection } from "astro:content";
 
 interface Props {
     title: string;
@@ -39,6 +40,34 @@ interface Props {
 }
 
 const { title, subtitle, areas, bgClass = "bg-secondary" } = Astro.props;
+
+// Obtener todas las ubicaciones para verificar si existe la página
+const locations = await getCollection("locations");
+const locationSlugs = new Set(locations.map(l => l.slug));
+
+// Función para generar slug a partir del nombre
+function nameToSlug(name: string): string {
+    return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Quitar acentos
+        .replace(/\s*\/\s*/g, "-") // Sant Martí / Poblenou → sant-marti-poblenou
+        .replace(/\s+/g, "-") // Espacios a guiones
+        .replace(/[^a-z0-9-]/g, "") // Solo alfanuméricos y guiones
+        .replace(/-+/g, "-") // Múltiples guiones a uno
+        .replace(/^-|-$/g, ""); // Quitar guiones al inicio/final
+}
+
+// Mapeo manual para casos especiales
+const slugOverrides: Record<string, string> = {
+    "Sant Martí / Poblenou": "sant-marti",
+    "L'Hospitalet de Llobregat": "hospitalet-de-llobregat",
+};
+
+function getSlug(name: string): string | null {
+    const slug = slugOverrides[name] || nameToSlug(name);
+    return locationSlugs.has(slug) ? slug : null;
+}
 
 const iconMap: Record<string, any> = {
     Building2,
@@ -85,10 +114,10 @@ const iconMap: Record<string, any> = {
 
                         <div class="grid sm:grid-cols-2 gap-4">
                             {areas.barcelona.districts?.map((district) => {
-                                const Icon =
-                                    iconMap[district.icon || ""] || Home;
-                                return (
-                                    <div class="p-5 rounded-2xl bg-surface border border-heading/5 hover:border-primary/30 transition-all group relative overflow-hidden">
+                                const Icon = iconMap[district.icon || ""] || Home;
+                                const slug = getSlug(district.name);
+                                const CardContent = (
+                                    <>
                                         {district.popular && (
                                             <span class="absolute top-2 right-2 px-2 py-0.5 bg-accent text-[10px] font-bold text-secondary rounded-full uppercase tracking-tighter">
                                                 Popular
@@ -109,6 +138,16 @@ const iconMap: Record<string, any> = {
                                                 )}
                                             </div>
                                         </div>
+                                    </>
+                                );
+
+                                return slug ? (
+                                    <a href={`/zona/${slug}/`} class="block p-5 rounded-2xl bg-surface border border-heading/5 hover:border-primary/30 transition-all group relative overflow-hidden">
+                                        {CardContent}
+                                    </a>
+                                ) : (
+                                    <div class="p-5 rounded-2xl bg-surface border border-heading/5 hover:border-primary/30 transition-all group relative overflow-hidden">
+                                        {CardContent}
                                     </div>
                                 );
                             })}
@@ -137,21 +176,34 @@ const iconMap: Record<string, any> = {
 
                         <div class="bg-surface/50 rounded-3xl p-6 border border-heading/5">
                             <div class="grid sm:grid-cols-2 gap-2">
-                                {areas.metropolitan.cities?.map((city) => (
-                                    <div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface transition-colors group">
-                                        <div class="flex items-center gap-3">
-                                            <MapPin className="w-4 h-4 text-primary opacity-40 group-hover:opacity-100" />
-                                            <span class="text-sm font-medium text-heading">
-                                                {city.name}
+                                {areas.metropolitan.cities?.map((city) => {
+                                    const slug = getSlug(city.name);
+                                    const CityContent = (
+                                        <>
+                                            <div class="flex items-center gap-3">
+                                                <MapPin className="w-4 h-4 text-primary opacity-40 group-hover:opacity-100" />
+                                                <span class="text-sm font-medium text-heading">
+                                                    {city.name}
+                                                </span>
+                                            </div>
+                                            <span
+                                                class={`text-[10px] font-bold px-2 py-0.5 rounded-full ${city.supplement === "Gratis" ? "bg-green-100 text-green-700 border border-green-200" : "bg-primary/10 text-primary"}`}
+                                            >
+                                                {city.supplement}
                                             </span>
+                                        </>
+                                    );
+
+                                    return slug ? (
+                                        <a href={`/zona/${slug}/`} class="flex items-center justify-between p-3 rounded-xl hover:bg-surface transition-colors group">
+                                            {CityContent}
+                                        </a>
+                                    ) : (
+                                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface transition-colors group">
+                                            {CityContent}
                                         </div>
-                                        <span
-                                            class={`text-[10px] font-bold px-2 py-0.5 rounded-full ${city.supplement === "Gratis" ? "bg-green-100 text-green-700 border border-green-200" : "bg-primary/10 text-primary"}`}
-                                        >
-                                            {city.supplement}
-                                        </span>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
