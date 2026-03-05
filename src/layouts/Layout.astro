@@ -87,6 +87,7 @@ interface Props {
     stickyPhone?: boolean;
     whatsappFloat?: boolean;
     preloadImage?: string;
+    canonical?: string;
 }
 
 const {
@@ -97,6 +98,7 @@ const {
     stickyPhone = true,
     whatsappFloat = true,
     preloadImage,
+    canonical,
 } = Astro.props;
 
 // Generar descripción por defecto si no viene en props
@@ -149,6 +151,7 @@ const heroOpacity = settings.heroOverlayOpacity ?? 0.6;
             description={description || defaultDescription}
             schema={schema}
             noindex={noindex}
+            canonical={canonical}
         />
 
         <SearchConsoleVerification />
