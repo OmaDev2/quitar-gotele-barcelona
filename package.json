@@ -65,6 +65,7 @@
         "@types/react-dom": "^19.0.2",
         "axios": "^1.7.9",
         "dotenv": "^16.4.7",
+        "googleapis": "^171.4.0",
         "json5": "^2.2.3",
         "schema-dts": "^1.1.5"
     }
