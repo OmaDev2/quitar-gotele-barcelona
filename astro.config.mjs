@@ -2,7 +2,9 @@ import { defineConfig } from 'astro/config';
 import fs from 'node:fs';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import keystatic from '@keystatic/astro';
+// Keystatic solo se carga en desarrollo local
+const isDev = process.env.NODE_ENV !== 'production';
+const keystatic = isDev ? (await import('@keystatic/astro')).default : null;
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
@@ -37,9 +39,8 @@ export default defineConfig({
 
   integrations: [
     react(),
-    keystatic({
-      disableAutomaticRoutes: true,
-    }),
+    // ✅ Keystatic únicamente en desarrollo local (no en producción)
+    ...(isDev && keystatic ? [keystatic({ disableAutomaticRoutes: true })] : []),
     mdx(),
     tailwind(),
     sitemap({
@@ -129,13 +130,13 @@ export default defineConfig({
     inlineStylesheets: 'always', // Inline CSS en HTML para evitar bloqueo de renderizado en FCP y LCP
   },
 
-  // ✅ MODO SERVER: Necesario para Keystatic y API routes
+  // ✅ MODO SERVER: necesario para API routes
   output: 'static',
   adapter: netlify(),
 
   vite: {
     ssr: {
-      noExternal: ['@keystatic/core', '@keystatic/astro'],
+      noExternal: isDev ? ['@keystatic/core', '@keystatic/astro'] : [],
     }
   }
 });

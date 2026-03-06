@@ -2,62 +2,62 @@
 import { marked } from "marked";
 
 interface Props {
-    title?: string;
-    sections?: {
-        heading: string;
-        content: string;
-        readMore?: boolean;
-    }[];
-    bgClass?: string;
+  title?: string;
+  sections?: {
+    heading: string;
+    content: string;
+    readMore?: boolean;
+  }[];
+  bgClass?: string;
 }
 
 const { title, sections, bgClass = "bg-secondary" } = Astro.props;
 ---
 
 <section class={`py-16 md:py-24 ${bgClass}`}>
-    <div class="container mx-auto px-4 max-w-5xl">
-        {
-            title && (
-                <div class="text-center mb-16 md:mb-20">
-                    <h2 class="text-3xl md:text-5xl font-heading font-bold text-heading mb-4 tracking-tight">
-                        {title}
-                    </h2>
-                    <div class="w-20 h-1 bg-primary mx-auto rounded-full" />
+  <div class="container mx-auto px-4 max-w-5xl">
+    {
+      title && (
+        <div class="text-center mb-16 md:mb-20">
+          <h2 class="text-3xl md:text-5xl font-heading font-bold text-heading mb-4 tracking-tight">
+            {title}
+          </h2>
+          <div class="w-20 h-1 bg-primary mx-auto rounded-full" />
+        </div>
+      )
+    }
+
+    <div class="space-y-16 md:space-y-20">
+      {
+        sections?.map((section: any, index: number) => (
+          <article class="reveal-on-scroll bg-surface rounded-2xl shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden">
+            {/* Barra superior decorativa con gradiente del tema */}
+            <div class="h-1.5 bg-gradient-to-r from-primary via-accent to-primary opacity-80" />
+
+            <div class="p-6 md:p-10">
+              {/* Header de la sección */}
+              <div class="flex items-start gap-4 mb-4">
+                {/* Badge numérico con colores del tema */}
+                <div class="hidden md:flex w-12 h-12 bg-primary/10 rounded-xl items-center justify-center flex-shrink-0 border-2 border-primary/20">
+                  <span class="text-xl font-bold text-primary">
+                    {index + 1}
+                  </span>
                 </div>
-            )
-        }
 
-        <div class="space-y-16 md:space-y-20">
-            {
-                sections?.map((section: any, index: number) => (
-                    <article class="reveal-on-scroll bg-surface rounded-2xl shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden">
-                        {/* Barra superior decorativa con gradiente del tema */}
-                        <div class="h-1.5 bg-gradient-to-r from-primary via-accent to-primary opacity-80" />
+                {/* Título */}
+                <h3 class="text-2xl md:text-3xl font-heading font-bold text-heading flex-1 leading-tight self-center">
+                  {section.heading || section.title}
+                </h3>
+              </div>
 
-                        <div class="p-6 md:p-10">
-                            {/* Header de la sección */}
-                            <div class="flex items-start gap-4 mb-4">
-                                {/* Badge numérico con colores del tema */}
-                                <div class="hidden md:flex w-12 h-12 bg-primary/10 rounded-xl items-center justify-center flex-shrink-0 border-2 border-primary/20">
-                                    <span class="text-xl font-bold text-primary">
-                                        {index + 1}
-                                    </span>
-                                </div>
-
-                                {/* Título */}
-                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-heading flex-1 leading-tight self-center">
-                                    {section.heading || section.title}
-                                </h3>
-                            </div>
-
-                            {/* Contenido - ADAPTADO A TU SISTEMA DE COLORES */}
-                            {section.content && (
-                                <div
-                                    class="read-more-container relative group"
-                                    data-state="collapsed"
-                                >
-                                    <div
-                                        class={`read-more-content prose prose-lg max-w-none transition-all duration-700 ease-in-out overflow-hidden
+              {/* Contenido - ADAPTADO A TU SISTEMA DE COLORES */}
+              {section.content && (
+                <div
+                  class="read-more-container relative group"
+                  data-state="collapsed"
+                >
+                  <div
+                    class={`read-more-content prose prose-lg max-w-none transition-all duration-700 ease-in-out overflow-hidden
                                         ${section.readMore === true || section.readMore === "true" ? "max-h-[400px]" : "max-h-none"}
                                         prose-headings:font-heading prose-headings:font-bold prose-headings:text-heading 
                                         prose-headings:mt-8 prose-headings:mb-4
@@ -111,151 +111,156 @@ const { title, sections, bgClass = "bg-secondary" } = Astro.props;
                                         prose-img:border prose-img:border-heading/10
                                         
                                         prose-hr:border-heading/20 prose-hr:my-12`}
-                                        data-readmore={String(section.readMore)}
-                                        set:html={marked.parse(section.content)}
-                                    />
+                    data-readmore={String(section.readMore)}
+                    set:html={marked.parse(section.content)}
+                  />
 
-                                    {section.readMore && (
-                                        <>
-                                            <div class="read-more-overlay absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent transition-opacity duration-500 pointer-events-none" />
-                                            <div class="relative z-10 text-center -mt-6">
-                                                <button class="read-more-btn inline-flex items-center gap-2 bg-white border border-primary/20 text-primary px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-primary hover:text-white transition-all duration-300 transform active:scale-95 group">
-                                                    <span class="btn-text">
-                                                        Leer más detalladamente
-                                                    </span>
-                                                    <svg
-                                                        class="w-4 h-4 transition-transform duration-300 group-data-[expanded]:rotate-180"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M19 9l-7 7-7-7"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </article>
-                ))
-            }
-        </div>
-
-        {/* CTA final - ADAPTADO A TU SISTEMA */}
-        <div class="mt-16 pt-12 border-t border-heading/10 text-center">
-            <p class="text-body mb-6 text-lg font-medium">
-                ¿Tienes más preguntas sobre quitar el gotelé?
-            </p>
-            <a
-                href="/contacto/"
-                class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl font-heading font-bold hover:bg-accent transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-            >
-                <span>Solicitar Presupuesto Gratis</span>
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-            </a>
-        </div>
+                  {section.readMore && (
+                    <>
+                      <div class="read-more-overlay absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent transition-opacity duration-500 pointer-events-none" />
+                      <div class="relative z-10 text-center -mt-6">
+                        <button class="read-more-btn inline-flex items-center gap-2 bg-white border border-primary/20 text-primary px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-primary hover:text-white transition-all duration-300 transform active:scale-95 group">
+                          <span class="btn-text">Leer más detalladamente</span>
+                          <svg
+                            class="w-4 h-4 transition-transform duration-300 group-data-[expanded]:rotate-180"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      }
     </div>
+
+    {/* CTA final - ADAPTADO A TU SISTEMA */}
+    <div class="mt-16 pt-12 border-t border-heading/10 text-center">
+      <p class="text-body mb-6 text-lg font-medium">
+        ¿Tienes más preguntas sobre quitar el gotelé?
+      </p>
+      <a
+        href="/contacto/"
+        class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-xl font-heading font-bold hover:bg-accent transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+      >
+        <span>Solicitar Presupuesto Gratis</span>
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
 </section>
 
 <script>
-    function setupReadMore() {
-        const containers = document.querySelectorAll(".read-more-container");
+  function setupReadMore() {
+    const containers = document.querySelectorAll(".read-more-container");
 
-        containers.forEach((container) => {
-            const btn = container.querySelector(".read-more-btn");
-            const content = container.querySelector(
-                ".read-more-content",
-            ) as HTMLElement;
-            const overlay = container.querySelector(
-                ".read-more-overlay",
-            ) as HTMLElement;
-            const btnText = container.querySelector(".btn-text");
-            const svg = container.querySelector(
-                "svg",
-            ) as unknown as SVGSVGElement;
+    containers.forEach((container) => {
+      const btn = container.querySelector(".read-more-btn");
+      const content = container.querySelector(
+        ".read-more-content",
+      ) as HTMLElement;
+      const overlay = container.querySelector(
+        ".read-more-overlay",
+      ) as HTMLElement;
+      const btnText = container.querySelector(".btn-text");
+      const svg = container.querySelector("svg") as unknown as SVGSVGElement;
 
-            if (!btn || !content) return;
+      if (!btn || !content) return;
 
-            btn.addEventListener("click", () => {
-                const isCollapsed =
-                    container.getAttribute("data-state") === "collapsed";
+      btn.addEventListener("click", () => {
+        const isCollapsed =
+          container.getAttribute("data-state") === "collapsed";
 
-                if (isCollapsed) {
-                    // Expand
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    container.setAttribute("data-state", "expanded");
-                    if (btnText) btnText.textContent = "Mostrar menos";
-                    if (overlay) overlay.style.opacity = "0";
-                    if (svg) svg.style.transform = "rotate(180deg)";
-                } else {
-                    // Collapse
-                    content.style.maxHeight = "400px";
-                    container.setAttribute("data-state", "collapsed");
-                    if (btnText)
-                        btnText.textContent = "Leer más detalladamente";
-                    if (overlay) overlay.style.opacity = "1";
-                    if (svg) svg.style.transform = "rotate(0deg)";
+        if (isCollapsed) {
+          // 1. LEER propiedades geométricas ANTES de escribir estilos (evita reflow forzado)
+          const fullHeight = content.scrollHeight;
 
-                    // Optional: scroll back to the heading
-                    const rect = container.getBoundingClientRect();
-                    if (rect.top < 0) {
-                        container.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                        });
-                    }
-                }
-            });
-        });
-    }
+          // 2. ESCRIBIR en rAF, separado de la fase de lectura
+          window.requestAnimationFrame(() => {
+            content.style.maxHeight = fullHeight + "px";
+            container.setAttribute("data-state", "expanded");
+            if (btnText) btnText.textContent = "Mostrar menos";
+            if (overlay) overlay.style.opacity = "0";
+            if (svg) svg.style.transform = "rotate(180deg)";
+          });
+        } else {
+          // 1. LEER posición ANTES de modificar el DOM
+          const containerTop = container.getBoundingClientRect().top;
+          const needsScroll = containerTop < 0;
 
-    // Initialize on load and after view transitions
-    setupReadMore();
-    document.addEventListener("astro:after-swap", setupReadMore);
+          // 2. ESCRIBIR en rAF
+          window.requestAnimationFrame(() => {
+            content.style.maxHeight = "400px";
+            container.setAttribute("data-state", "collapsed");
+            if (btnText) btnText.textContent = "Leer más detalladamente";
+            if (overlay) overlay.style.opacity = "1";
+            if (svg) svg.style.transform = "rotate(0deg)";
+
+            // 3. Scroll opcional DENTRO del mismo rAF (ya tenemos el dato)
+            if (needsScroll) {
+              container.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Initialize on load and after view transitions
+  setupReadMore();
+  document.addEventListener("astro:after-swap", setupReadMore);
 </script>
 
 <style>
-    /* Animación reveal opcional */
-    .reveal-on-scroll {
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
+  /* Animación reveal opcional */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
-    .reveal-on-scroll:nth-child(2) {
-        animation-delay: 0.1s;
-    }
+  .reveal-on-scroll:nth-child(2) {
+    animation-delay: 0.1s;
+  }
 
-    .reveal-on-scroll:nth-child(3) {
-        animation-delay: 0.2s;
-    }
+  .reveal-on-scroll:nth-child(3) {
+    animation-delay: 0.2s;
+  }
 
-    @keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
