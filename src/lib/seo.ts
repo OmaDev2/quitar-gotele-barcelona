@@ -244,15 +244,17 @@ export function generateLocalBusinessSchema(
         schema.knowsAbout = settings.knowsAbout;
     }
 
-    // Rating agregado de testimonios
+    /* 
+    // Rating agregado de testimonios (TEMPORALMENTE DESACTIVADO - EVITAR PENALIZACIONES GOOGLE)
     if (aggregateRating && testimonials.length >= 1) {
         schema.aggregateRating = aggregateRating;
     }
 
-    // Reviews individuales
+    // Reviews individuales (TEMPORALMENTE DESACTIVADO)
     if (reviews.length > 0) {
         schema.review = reviews;
-    }
+    } 
+    */
 
     if (settings.coordinates?.lat && settings.coordinates?.lng) {
         schema.geo = {

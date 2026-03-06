@@ -12,6 +12,9 @@ schedule: "Lun-Vie 9:00-18:00, Sáb 10:00-14:00"
 nif: "" # Público: Lo dejamos vacío para el pie de página
 ctaText: "Quiero mis paredes Lisas Ya!"
 isSAB: true
+coordinates:
+  lat: "41.3851"
+  lng: "2.1734"
 
 # --- DATOS LEGALES (Privados - Solo para Aviso Legal y Privacidad) ---
 legalName: "Olga Millán"

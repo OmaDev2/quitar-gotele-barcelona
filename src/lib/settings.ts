@@ -21,8 +21,8 @@ export async function getSettings() {
         city: business?.data?.city || 'Tu Ciudad',
         address: business?.data?.address || 'Calle Principal 123',
         coordinates: {
-            lat: business?.data?.coordinates?.lat || '40.4168',
-            lng: business?.data?.coordinates?.lng || '-3.7038'
+            lat: business?.data?.coordinates?.lat || '41.3851',
+            lng: business?.data?.coordinates?.lng || '2.1734'
         },
         phone: business?.data?.phone || '600 000 000',
         whatsapp: business?.data?.whatsapp || '600 000 000',
