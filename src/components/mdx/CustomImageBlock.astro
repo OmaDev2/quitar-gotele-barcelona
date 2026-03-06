@@ -53,19 +53,28 @@ const shadowClass = shadowClasses[shadow] || shadowClasses.lg;
     class={`overflow-hidden border border-heading/10 bg-surface ${roundedClass} ${shadowClass}`}
   >
     {
-      image && (
-        <Image
+      image && typeof image === "string" ? (
+        <img
           src={image}
           alt={alt || ""}
           class={`w-full h-auto group-hover:scale-105 transition-transform duration-700 ${fitClass}`}
-          widths={[400, 800, 1200]}
-          sizes="(max-width: 800px) 100vw, 800px"
-          width={800}
-          height={450}
-          format="webp"
-          quality={80}
+          width="800"
+          height="450"
           loading="lazy"
         />
+      ) : (
+        image && (
+          <Image
+            src={image}
+            alt={alt || ""}
+            class={`w-full h-auto group-hover:scale-105 transition-transform duration-700 ${fitClass}`}
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 800px) 100vw, 800px"
+            format="webp"
+            quality={80}
+            loading="lazy"
+          />
+        )
       )
     }
   </div>
