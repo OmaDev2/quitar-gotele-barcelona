@@ -93,7 +93,7 @@ export default defineConfig({
 
   // 🚀 OPTIMIZACIÓN DE RENDIMIENTO
   build: {
-    inlineStylesheets: 'always', // Cambiado a 'auto' para evitar advertencia de "Unused CSS" y permitir caché del navegador
+    inlineStylesheets: 'never', // Evita inlined CSS que engorda el HTML y permite caché del navegador
   },
 
   // ✅ MODO SERVER: Necesario para Keystatic y API routes

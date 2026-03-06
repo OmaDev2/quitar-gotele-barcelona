@@ -72,6 +72,7 @@ import {
   generateLocalBusinessSchema,
   generateFAQSchema,
   generateBreadcrumbsList,
+  generateServicesSchema,
 } from "@/lib/seo";
 
 const localBusinessSchema = generateLocalBusinessSchema(
@@ -114,9 +115,26 @@ const faqSchema = generateFAQSchema(homepageFaqs);
 const breadcrumbsPoints = [{ name: "Inicio", item: Astro.url.href }];
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 
+const servicesListForSchema =
+  config.knowsAbout?.length > 0
+    ? config.knowsAbout
+    : allServices.map((s) => s.data.title);
+
+const servicesSchema = generateServicesSchema(
+  servicesListForSchema.map((name: string) => ({
+    name: name,
+    description: `Servicio experto de ${name} en ${config.city}. Resultados impecables y paredes perfectamente lisas.`,
+    price: "18",
+    unit: "m²",
+  })),
+  config.city,
+  config.siteUrl,
+);
+
 const schema = [
   localBusinessSchema,
   breadcrumbsSchema,
+  ...servicesSchema,
   ...(faqSchema ? [faqSchema] : []),
 ] as any;
 ---

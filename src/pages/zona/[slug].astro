@@ -53,6 +53,7 @@ import {
   generateLocalBusinessSchema,
   generateBreadcrumbsList,
   generateFAQSchema,
+  generateServicesSchema,
 } from "@/lib/seo";
 
 // Recopilar testimonios (idealmente filtraríamos por zona si tuviéramos esa data,
@@ -100,9 +101,26 @@ const breadcrumbsPoints = [
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 const faqSchema = generateFAQSchema(data.faq || []);
 
+const servicesListForSchema =
+  settings.knowsAbout?.length > 0
+    ? settings.knowsAbout
+    : allServices.map((s) => s.data.title);
+
+const servicesSchema = generateServicesSchema(
+  servicesListForSchema.map((name: string) => ({
+    name: name,
+    description: `Servicio experto de ${name} en ${data.name}. Resultados impecables con garantía profesional.`,
+    price: "18",
+    unit: "m²",
+  })),
+  data.name,
+  settings.siteUrl,
+);
+
 const finalSchema = [
   localSchema,
   breadcrumbsSchema,
+  ...servicesSchema,
   ...(faqSchema ? [faqSchema] : []),
 ];
 

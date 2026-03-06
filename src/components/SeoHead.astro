@@ -15,7 +15,14 @@ interface Props {
   canonical?: string;
 }
 
-const { title, description, image, schema, noindex = false, canonical } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  schema,
+  noindex = false,
+  canonical,
+} = Astro.props;
 
 // Generate canonical URL (override if explicitly provided)
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
@@ -36,6 +43,7 @@ const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g
       url: canonicalURL,
     },
     optional: {
+      description,
       locale: "es_ES",
       siteName: siteName,
     },

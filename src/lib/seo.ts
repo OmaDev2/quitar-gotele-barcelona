@@ -194,6 +194,7 @@ export function generateLocalBusinessSchema(
 
     const schema: any = {
         "@context": "https://schema.org",
+        "@id": `${baseUrl}/#business`,
         "@type": ["HomeAndConstructionBusiness", (settings.businessType || "HousePainter")],
         name: settings.siteName || "Negocio Local",
         image: settings.image?.startsWith("@assets")
@@ -288,4 +289,40 @@ export function generateLocalBusinessSchema(
     }
 
     return schema;
+}
+
+/**
+ * Genera el esquema de Servicios con precios
+ */
+export function generateServicesSchema(
+    services: { name: string; description?: string; price?: string; unit?: string }[],
+    city: string = "Barcelona",
+    siteUrl: string = "https://quitargotelebarcelona.es"
+): WithContext<any>[] {
+    if (!services || services.length === 0) return [];
+
+    return services.map(service => ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": service.name,
+        "description": service.description,
+        "provider": { 
+            "@id": `${siteUrl}/#business` 
+        },
+        "areaServed": {
+            "@type": "City",
+            "name": city
+        },
+        ...(service.price ? {
+            "offers": {
+                "@type": "Offer",
+                "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": service.price,
+                    "priceCurrency": "EUR",
+                    "unitText": service.unit || "m²"
+                }
+            }
+        } : {})
+    }));
 }
