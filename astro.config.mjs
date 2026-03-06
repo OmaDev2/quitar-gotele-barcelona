@@ -126,7 +126,7 @@ export default defineConfig({
 
   // 🚀 OPTIMIZACIÓN DE RENDIMIENTO
   build: {
-    inlineStylesheets: 'never', // Evita inlined CSS que engorda el HTML y permite caché del navegador
+    inlineStylesheets: 'always', // Inline CSS en HTML para evitar bloqueo de renderizado en FCP y LCP
   },
 
   // ✅ MODO SERVER: Necesario para Keystatic y API routes
