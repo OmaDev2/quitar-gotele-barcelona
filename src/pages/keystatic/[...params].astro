@@ -1,6 +1,10 @@
 ---
 export const prerender = false;
-import { KeystaticAdmin } from "../../components/KeystaticAdmin";
----
 
-<KeystaticAdmin client:only="react" />
+// Panel de administración - solo accesible en desarrollo local
+// En producción redirigimos a la página principal
+return Astro.redirect(
+  import.meta.env.DEV ? "/keystatic/" : "/",
+  import.meta.env.DEV ? 301 : 302,
+);
+---
