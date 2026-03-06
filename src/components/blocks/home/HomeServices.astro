@@ -2,6 +2,14 @@
 import { Image } from "astro:assets";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import DynamicIcon from "../../DynamicIcon.astro";
+
+// Helper: optimizar imágenes URL string via Netlify Image CDN
+function netlifyImg(src: string, w = 800, q = 60): string {
+  if (!src || src.startsWith("http")) return src;
+  const encoded = encodeURIComponent(src);
+  return `/.netlify/images?url=${encoded}&w=${w}&q=${q}&fm=webp`;
+}
+
 const {
   servicesSection,
   featuredServices = [],
@@ -111,17 +119,31 @@ const servicesToDisplay = customServices || featuredServices;
               href={link}
               class="group relative overflow-hidden rounded-lg border border-heading/10 hover:border-primary/50 transition-all hover:shadow-xl hover:shadow-primary/20 h-[400px]"
             >
-              <Image
-                src={image}
-                alt={title}
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                widths={[400, 800]}
-                sizes="(max-width: 768px) 100vw, 33vw"
-                width={800}
-                height={600}
-                format="webp"
-                quality={70}
-              />
+              {typeof image === "string" ? (
+                <img
+                  src={netlifyImg(image, 800, 60)}
+                  srcset={`${netlifyImg(image, 400, 60)} 400w, ${netlifyImg(image, 800, 60)} 800w`}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  alt={title}
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  width="800"
+                  height="600"
+                  decoding="async"
+                />
+              ) : (
+                <Image
+                  src={image}
+                  alt={title}
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  widths={[400, 800]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  width={800}
+                  height={600}
+                  format="webp"
+                  quality={60}
+                />
+              )}
               <div class="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/50 to-transparent" />
               <div class="relative h-full flex flex-col justify-end p-8">
                 <div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">

@@ -55,6 +55,13 @@ const heroSubtitle = subtitle
 
 // Limpieza de teléfono para el href
 const phoneHref = generateTelUrl(phone);
+
+// Helper: optimizar imágenes string via Netlify Image CDN
+function netlifyImg(src: string, w = 1200, q = 55): string {
+  if (!src || src.startsWith("http")) return src; // URLs externas: no tocar
+  const encoded = encodeURIComponent(src);
+  return `/.netlify/images?url=${encoded}&w=${w}&q=${q}&fm=webp`;
+}
 ---
 
 <section
@@ -65,13 +72,20 @@ const phoneHref = generateTelUrl(phone);
     {
       typeof selectedImage === "string" ? (
         <img
-          src={selectedImage}
+          src={netlifyImg(selectedImage, 1920, 55)}
+          srcset={
+            `${netlifyImg(selectedImage, 640, 55)} 640w, ` +
+            `${netlifyImg(selectedImage, 1200, 55)} 1200w, ` +
+            `${netlifyImg(selectedImage, 1920, 55)} 1920w`
+          }
+          sizes="100vw"
           alt={`${niche} en ${locationName}`}
           class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[2s]"
           fetchpriority="high"
           loading="eager"
           width="1920"
           height="1080"
+          decoding="async"
         />
       ) : (
         <Image
@@ -80,10 +94,10 @@ const phoneHref = generateTelUrl(phone);
           class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[2s]"
           fetchpriority="high"
           loading="eager"
-          widths={[400, 800, 1200, 1920]}
+          widths={[640, 1200, 1920]}
           sizes="100vw"
           format="webp"
-          quality={80}
+          quality={55}
         />
       )
     }
@@ -104,12 +118,12 @@ const phoneHref = generateTelUrl(phone);
   </div>
 
   {/* --- 2. CONTENIDO --- */}
-  <div class="container mx-auto px-4 lg:px-8 relative z-10 py-12 lg:py-20">
+  <div
+    class="container mx-auto px-4 lg:px-8 relative z-10 pt-28 pb-12 lg:pt-32 lg:pb-20"
+  >
     <div class="grid lg:grid-cols-12 gap-12 items-center">
       {/* --- COLUMNA IZQUIERDA: TEXTO (7 cols) --- */}
-      <div
-        class="lg:col-span-7 space-y-8 text-center lg:text-left pt-20 lg:pt-0"
-      >
+      <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
         {/* Breadcrumb y Badge Superior */}
         <div class="flex flex-col items-center lg:items-start gap-6">
           {
