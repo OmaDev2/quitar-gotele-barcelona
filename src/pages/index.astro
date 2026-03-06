@@ -16,32 +16,32 @@ const homeData = (home?.data || {}) as any;
 
 // Prioritize testimonials from Home Singleton, fallback to Collection
 const rawTestimonials =
-	homeData.testimonials && homeData.testimonials.length > 0
-		? homeData.testimonials.map((t: any) => ({
-				name: t.author,
-				text: t.quote,
-				location: t.location,
-				initials: t.initials,
-				rating: 5, // Default rating for home singleton testimonials
-			}))
-		: testimonialsCollection.map((t) => ({
-				name: t.data.name,
-				text: t.data.text,
-				location: "", // Collection doesn't have location in schema currently?
-				initials: t.data.initials,
-				rating: t.data.rating,
-			}));
+  homeData.testimonials && homeData.testimonials.length > 0
+    ? homeData.testimonials.map((t: any) => ({
+        name: t.author,
+        text: t.quote,
+        location: t.location,
+        initials: t.initials,
+        rating: 5, // Default rating for home singleton testimonials
+      }))
+    : testimonialsCollection.map((t) => ({
+        name: t.data.name,
+        text: t.data.text,
+        location: "", // Collection doesn't have location in schema currently?
+        initials: t.data.initials,
+        rating: t.data.rating,
+      }));
 
 const testimonials = rawTestimonials;
 
 // Render contenido SEO
 let SeoContentRendered;
 try {
-	const renderResult = home ? await home.render() : { Content: () => null };
-	SeoContentRendered = renderResult.Content;
+  const renderResult = home ? await home.render() : { Content: () => null };
+  SeoContentRendered = renderResult.Content;
 } catch (e) {
-	console.error("Error rendering home content:", e);
-	SeoContentRendered = () => null;
+  console.error("Error rendering home content:", e);
+  SeoContentRendered = () => null;
 }
 
 // 2. Global Settings
@@ -50,89 +50,95 @@ const config = await getSettings();
 
 // 3. Page Builder Logic
 const defaultBlocks = [
-	{ discriminant: "hero" },
-	{ discriminant: "services_grid" },
-	{ discriminant: "about" },
-	{ discriminant: "features" },
-	{ discriminant: "contact" },
-	{ discriminant: "testimonials" },
-	{ discriminant: "content" },
-	{ discriminant: "faq" },
-	{ discriminant: "locations" },
-	{ discriminant: "cta" },
+  { discriminant: "hero" },
+  { discriminant: "services_grid" },
+  { discriminant: "about" },
+  { discriminant: "features" },
+  { discriminant: "contact" },
+  { discriminant: "testimonials" },
+  { discriminant: "content" },
+  { discriminant: "faq" },
+  { discriminant: "locations" },
+  { discriminant: "cta" },
 ];
 
 const finalBlocks =
-	homeData.blocks && homeData.blocks.length > 0
-		? homeData.blocks
-		: defaultBlocks;
+  homeData.blocks && homeData.blocks.length > 0
+    ? homeData.blocks
+    : defaultBlocks;
 
 // 4. Schema SEO
 import {
-	generateLocalBusinessSchema,
-	generateFAQSchema,
-	generateBreadcrumbsList,
+  generateLocalBusinessSchema,
+  generateFAQSchema,
+  generateBreadcrumbsList,
 } from "@/lib/seo";
 
 const localBusinessSchema = generateLocalBusinessSchema(
-	{
-		siteName: config.siteName,
-		phone: config.phone,
-		city: config.city,
-		address: config.address,
-		coordinates: config.coordinates,
-		image: config.logo || `${config.siteUrl}/images/home/logo.webp`,
-		businessType: config.businessType,
-		description: `${config.niche} en ${config.city}. Servicio profesional.`,
-		areaServed: config.areaServed,
-		serviceRadius: config.serviceRadius,
-		openingHours: config.openingHours,
-		paymentAccepted: config.paymentAccepted,
-		slogan: config.slogan,
-		knowsAbout:
-			config.knowsAbout?.length > 0
-				? config.knowsAbout
-				: allServices.map((s) => s.data.title),
-		isSAB: config.isSAB,
-		foundingDate: config.foundingDate,
-		siteUrl: config.siteUrl,
-		socialProfiles: {
-			facebook: config.facebook,
-			instagram: config.instagram,
-		},
-	},
-	testimonialsCollection,
-	Astro.url.href,
+  {
+    siteName: config.siteName,
+    phone: config.phone,
+    city: config.city,
+    address: config.address,
+    coordinates: config.coordinates,
+    image: config.logo || `${config.siteUrl}/images/home/logo.webp`,
+    businessType: config.businessType,
+    description: `${config.niche} en ${config.city}. Servicio profesional.`,
+    areaServed: config.areaServed,
+    serviceRadius: config.serviceRadius,
+    openingHours: config.openingHours,
+    paymentAccepted: config.paymentAccepted,
+    slogan: config.slogan,
+    knowsAbout:
+      config.knowsAbout?.length > 0
+        ? config.knowsAbout
+        : allServices.map((s) => s.data.title),
+    isSAB: config.isSAB,
+    foundingDate: config.foundingDate,
+    siteUrl: config.siteUrl,
+    socialProfiles: {
+      facebook: config.facebook,
+      instagram: config.instagram,
+    },
+  },
+  testimonialsCollection,
+  Astro.url.href,
 );
 
 const homepageFaqs =
-	homeData.faq ||
-	homeData.blocks?.find((b: any) => b.discriminant === "faq")?.value
-		?.questions ||
-	[];
+  homeData.faq ||
+  homeData.blocks?.find((b: any) => b.discriminant === "faq")?.value
+    ?.questions ||
+  [];
 const faqSchema = generateFAQSchema(homepageFaqs);
+const breadcrumbsPoints = [{ name: "Inicio", item: Astro.url.href }];
+const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 
-const schema = [localBusinessSchema, ...(faqSchema ? [faqSchema] : [])] as any;
+const schema = [
+  localBusinessSchema,
+  breadcrumbsSchema,
+  ...(faqSchema ? [faqSchema] : []),
+] as any;
 ---
 
 <Layout
-	title={homeData.seoTitle ||
-		`${homeData.hero?.heading || config.niche + " en " + config.city} | ${config.siteName}`}
-	description={homeData.seoDescription}
-	schema={schema}
-	stickyPhone={homeData.stickyPhone}
-	whatsappFloat={homeData.whatsappFloat}
-	preloadImage="/images/home/blocks/0/value/backgroundImage.webp"
+  title={homeData.seoTitle ||
+    `${homeData.hero?.heading || config.niche + " en " + config.city} | ${config.siteName}`}
+  description={homeData.seoDescription}
+  schema={schema}
+  stickyPhone={homeData.stickyPhone}
+  whatsappFloat={homeData.whatsappFloat}
+  preloadImage="/images/home/blocks/0/value/backgroundImage.webp"
 >
-	<BlockRenderer
-		blocks={finalBlocks}
-		isHome={true}
-		config={config}
-		city={config.city}
-		services={featuredServices}
-		allServices={allServices}
-		content={SeoContentRendered}
-	/>
+  <BlockRenderer
+    blocks={finalBlocks}
+    isHome={true}
+    config={config}
+    city={config.city}
+    services={featuredServices}
+    allServices={allServices}
+    content={SeoContentRendered}
+  />
 
-	<Footer />
+  <Footer />
 </Layout>

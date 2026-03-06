@@ -273,13 +273,15 @@ export function generateLocalBusinessSchema(
         );
     }
 
-    // Perfiles sociales para E-E-A-T
+    // Perfiles sociales para E-E-A-T (Filtrar placeholders genéricos)
     const sameAs: string[] = [];
-    if (settings.socialProfiles?.facebook && settings.socialProfiles.facebook !== 'https://facebook.com') {
-        sameAs.push(settings.socialProfiles.facebook);
+    const fb = settings.socialProfiles?.facebook;
+    if (fb && fb !== 'https://facebook.com' && fb !== 'https://www.facebook.com') {
+        sameAs.push(fb);
     }
-    if (settings.socialProfiles?.instagram && settings.socialProfiles.instagram !== 'https://www.instagram.com') {
-        sameAs.push(settings.socialProfiles.instagram);
+    const ig = settings.socialProfiles?.instagram;
+    if (ig && ig !== 'https://instagram.com' && ig !== 'https://www.instagram.com') {
+        sameAs.push(ig);
     }
     if (sameAs.length > 0) {
         schema.sameAs = sameAs;

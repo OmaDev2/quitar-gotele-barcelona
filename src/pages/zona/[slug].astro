@@ -15,11 +15,11 @@ export const prerender = true;
 
 // 1. Generar rutas estáticas para cada zona
 export async function getStaticPaths() {
-    const locations = await getCollection("locations");
-    return locations.map((entry) => ({
-        params: { slug: entry.slug },
-        props: { entry },
-    }));
+  const locations = await getCollection("locations");
+  return locations.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
 }
 
 // 2. Obtener los datos de la zona actual
@@ -29,11 +29,11 @@ const data = entry.data;
 
 // Componentes disponibles en MDX
 const mdxComponents = {
-    CtaBlock,
-    AlertBlock,
-    PhoneBlock,
-    BusinessNameBlock,
-    CustomImageBlock,
+  CtaBlock,
+  AlertBlock,
+  PhoneBlock,
+  BusinessNameBlock,
+  CustomImageBlock,
 };
 
 // 3. Obtener configuración global
@@ -41,7 +41,7 @@ const settings = await getSettings();
 
 // 4. Obtener servicios destacados
 const allServices = await getCollection("services", ({ data }) => {
-    return data.featured === true;
+  return data.featured === true;
 });
 
 // 5. Obtener todas las zonas para el sidebar
@@ -50,88 +50,91 @@ const allLocations = await getCollection("locations");
 // 6. Schema SEO Local
 // 6. Schema SEO Local
 import {
-    generateLocalBusinessSchema,
-    generateBreadcrumbsList,
-    generateFAQSchema,
+  generateLocalBusinessSchema,
+  generateBreadcrumbsList,
+  generateFAQSchema,
 } from "@/lib/seo";
 
 // Recopilar testimonios (idealmente filtraríamos por zona si tuviéramos esa data,
 // por ahora usamos los destacados globalmente para dar autoridad)
 const testimonials = await getCollection(
-    "testimonials",
-    ({ data }) => data.featured === true,
+  "testimonials",
+  ({ data }) => data.featured === true,
 );
 
 const localSchema = generateLocalBusinessSchema(
-    {
-        siteName: `${settings.niche} en ${data.name} | ${settings.siteName}`,
-        phone: settings.phone,
-        city: data.name,
-        address: undefined,
-        coordinates: data.coordinates,
-        image: data.heroImage,
-        businessType: settings.businessType,
-        areaServed: data.name,
-        openingHours: settings.openingHours,
-        paymentAccepted: settings.paymentAccepted,
-        slogan: settings.slogan,
-        knowsAbout:
-            settings.knowsAbout?.length > 0
-                ? settings.knowsAbout
-                : allServices.map((s) => s.data.title),
-        isSAB: settings.isSAB,
-        foundingDate: settings.foundingDate,
-        siteUrl: settings.siteUrl,
-        socialProfiles: { facebook: settings.facebook, instagram: settings.instagram },
+  {
+    siteName: settings.siteName,
+    phone: settings.phone,
+    city: data.name,
+    address: undefined,
+    coordinates: data.coordinates,
+    image: data.heroImage,
+    businessType: settings.businessType,
+    areaServed: data.name,
+    openingHours: settings.openingHours,
+    paymentAccepted: settings.paymentAccepted,
+    slogan: settings.slogan,
+    knowsAbout:
+      settings.knowsAbout?.length > 0
+        ? settings.knowsAbout
+        : allServices.map((s) => s.data.title),
+    isSAB: settings.isSAB,
+    foundingDate: settings.foundingDate,
+    siteUrl: settings.siteUrl,
+    socialProfiles: {
+      facebook: settings.facebook,
+      instagram: settings.instagram,
     },
-    testimonials,
-    Astro.url.href,
+  },
+  testimonials,
+  Astro.url.href,
 );
 
 const breadcrumbsPoints = [
-    { name: "Inicio", item: Astro.site?.href || "https://example.com" },
-    { name: "Zonas", item: new URL("/zonas/", Astro.site).href },
-    { name: data.name, item: Astro.url.href },
+  { name: "Inicio", item: Astro.site?.href || "https://example.com" },
+  { name: "Zonas", item: new URL("/zonas/", Astro.site).href },
+  { name: data.name, item: Astro.url.href },
 ];
 
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 const faqSchema = generateFAQSchema(data.faq || []);
 
 const finalSchema = [
-    localSchema,
-    breadcrumbsSchema,
-    ...(faqSchema ? [faqSchema] : []),
+  localSchema,
+  breadcrumbsSchema,
+  ...(faqSchema ? [faqSchema] : []),
 ];
 
 // 7. SEO: Título y descripción
 const pageTitle =
-    data.seoTitle || `${settings.niche} en ${data.name} | ${settings.siteName}`;
+  data.seoTitle || `${settings.niche} en ${data.name} | ${settings.siteName}`;
 const pageDescription =
-    data.seoDesc ||
-    `Servicio profesional de ${settings.niche.toLowerCase()} en ${data.name}. Presupuesto gratis.`;
+  data.seoDesc ||
+  `Servicio profesional de ${settings.niche.toLowerCase()} en ${data.name}. Presupuesto gratis.`;
 ---
 
 <LocationLayout
-    locationName={data.name}
-    locationType={data.type}
-    zipCodes={data.zipCodes}
-    heroImage={data.heroImage}
-    heroTitle={data.heroTitle}
-    heroSubtitle={data.heroSubtitle}
-    coordinates={data.coordinates}
-    faq={data.faq}
-    content={Content}
-    siteName={settings.siteName}
-    phone={settings.phone}
-    whatsapp={settings.whatsapp}
-    niche={settings.niche}
-    city={settings.city}
-    services={allServices}
-    allLocations={allLocations}
-    currentSlug={entry.slug}
-    pageTitle={pageTitle}
-    pageDescription={pageDescription}
-    schema={finalSchema}
-    mdxComponents={mdxComponents}
-    blocks={data.blocks}
+  locationName={data.name}
+  locationType={data.type}
+  zipCodes={data.zipCodes}
+  heroImage={data.heroImage}
+  heroTitle={data.heroTitle}
+  heroSubtitle={data.heroSubtitle}
+  coordinates={data.coordinates}
+  faq={data.faq}
+  content={Content}
+  siteName={settings.siteName}
+  phone={settings.phone}
+  whatsapp={settings.whatsapp}
+  niche={settings.niche}
+  city={settings.city}
+  services={allServices}
+  allLocations={allLocations}
+  currentSlug={entry.slug}
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  schema={finalSchema}
+  mdxComponents={mdxComponents}
+  blocks={data.blocks}
 />

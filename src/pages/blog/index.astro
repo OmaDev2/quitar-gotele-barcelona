@@ -4,6 +4,10 @@ import Footer from "../../components/Footer.astro";
 import FinalCTA from "../../components/FinalCTA.astro";
 import { getCollection } from "astro:content";
 import { Calendar, User, ArrowRight } from "lucide-react";
+import { generateBreadcrumbsList } from "@/lib/seo";
+import { getSettings } from "@/lib/settings";
+
+const config = await getSettings();
 
 const posts = (await getCollection("blog")).sort(
 	(a, b) => {
@@ -18,9 +22,15 @@ const formatDate = (dateString?: string) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 };
+
+const breadcrumbsPoints = [
+    { name: "Inicio", item: config.siteUrl || "https://quitargotelebarcelona.es" },
+    { name: "Blog", item: Astro.url.href },
+];
+const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 ---
 
-<Layout title="Blog - Consejos y Guías" description="Artículos, guías y consejos útiles sobre nuestros servicios y el sector.">
+<Layout title="Blog - Consejos y Guías" description="Artículos, guías y consejos útiles sobre nuestros servicios y el sector." schema={breadcrumbsSchema}>
     <!-- Hero Section -->
     <section class="relative py-20 bg-secondary overflow-hidden">
         <div class="absolute inset-0 bg-[url('/bg-pattern.svg')] opacity-5"></div>
