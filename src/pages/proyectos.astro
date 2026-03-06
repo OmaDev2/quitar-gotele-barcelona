@@ -5,6 +5,7 @@ import FinalCTA from "../components/FinalCTA.astro";
 import { getCollection, getEntry } from "astro:content";
 import { MapPin } from "lucide-react";
 import { generateBreadcrumbsList } from "@/lib/seo";
+import type { WithContext, CollectionPage } from "schema-dts";
 
 const projects = await getCollection("projects");
 const business = await getEntry("business", "global");
@@ -21,15 +22,14 @@ const breadcrumbsPoints = [
 ];
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 
-const gallerySchema = [
-  {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `Galería de Trabajos - ${siteName}`,
-    description: `Portafolio de trabajos de ${niche} en ${city}.`,
-  },
-  breadcrumbsSchema,
-];
+const collectionPageSchema: WithContext<CollectionPage> = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `Galería de Trabajos - ${siteName}`,
+  description: `Portafolio de trabajos de ${niche} en ${city}.`,
+};
+
+const gallerySchema = [collectionPageSchema, breadcrumbsSchema];
 ---
 
 <Layout

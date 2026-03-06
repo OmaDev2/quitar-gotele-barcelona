@@ -108,7 +108,9 @@ export function formatAreaServed(areaData: any, radius?: number, coordinates?: {
         "Hospitalet del Llobregat": "https://www.wikidata.org/wiki/Q15470", // Handle typos
         "Sabadell": "https://www.wikidata.org/wiki/Q12258",
         "Terrassa": "https://www.wikidata.org/wiki/Q13939",
-        "Mataró": "https://www.wikidata.org/wiki/Q13727"
+        "Mataró": "https://www.wikidata.org/wiki/Q13727",
+        "Sant Cugat del Vallès": "https://www.wikidata.org/wiki/Q13945",
+        "Santa Coloma de Gramenet": "https://www.wikidata.org/wiki/Q15626"
     };
 
     const mapItem = (item: any) => {

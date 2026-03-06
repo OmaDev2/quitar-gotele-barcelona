@@ -13,6 +13,7 @@ import {
 import HeroContactForm from "../HeroContactForm.astro";
 import { spin } from "../../utils/spintax";
 import { generateTelUrl } from "../../utils/contact";
+import Breadcrumbs from "../Breadcrumbs.astro";
 
 // --- PROPS & LOGIC ---
 const props = Astro.props;
@@ -24,6 +25,8 @@ const phone = props.phone;
 const title = spin(props.title);
 const subtitle = props.subtitle;
 const isIndustrial = Astro.props.locationType === "industrial";
+const isLocation = props.isLocation;
+const isService = props.isService;
 
 // Lógica de Selección de Imagen (Mantenida intacta)
 let selectedImage = null;
@@ -96,19 +99,35 @@ const phoneHref = generateTelUrl(phone);
   <div class="container mx-auto px-4 lg:px-8 relative z-10 py-12 lg:py-20">
     <div class="grid lg:grid-cols-12 gap-12 items-center">
       {/* --- COLUMNA IZQUIERDA: TEXTO (7 cols) --- */}
-      <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
-        {/* Badge Superior */}
-        <div
-          class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm mx-auto lg:mx-0"
-        >
-          <span class="relative flex h-2 w-2">
-            <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"
-            ></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"
-            ></span>
-          </span>
-          Disponible en {locationName}
+      <div
+        class="lg:col-span-7 space-y-8 text-center lg:text-left pt-20 lg:pt-0"
+      >
+        {/* Breadcrumb y Badge Superior */}
+        <div class="flex flex-col items-center lg:items-start gap-6">
+          {
+            (isLocation || isService) && (
+              <Breadcrumbs
+                locationName={locationName}
+                serviceName={title}
+                isLocation={isLocation}
+                isService={isService}
+              />
+            )
+          }
+
+          {/* Badge Superior */}
+          <div
+            class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm"
+          >
+            <span class="relative flex h-2 w-2">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"
+              ></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"
+              ></span>
+            </span>
+            Disponible en {locationName}
+          </div>
         </div>
 
         {/* Título Principal */}

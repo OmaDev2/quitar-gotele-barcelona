@@ -86,7 +86,7 @@ const defaults = {
           "Años perfeccionando nuestras técnicas y conociendo el sector.",
       },
       {
-        title: "Garantía por Escrito",
+        title: "Garantía",
         description:
           "Todos nuestros trabajos incluyen garantía y factura reglamentaria.",
       },
@@ -166,16 +166,15 @@ const breadcrumbsPoints = [
 ];
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 
-const schema = [
-  {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    name: seo.title || `Sobre Nosotros - ${siteName}`,
-    description: seo.description || defaults.seo.description,
-    mainEntity: localBusinessSchema as any,
-  },
-  breadcrumbsSchema,
-];
+const aboutPageSchema: WithContext<AboutPage> = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: seo.title || `Sobre Nosotros - ${siteName}`,
+  description: seo.description || defaults.seo.description,
+  mainEntity: localBusinessSchema as any,
+};
+
+const schema = [aboutPageSchema, breadcrumbsSchema];
 ---
 
 <Layout

@@ -30,12 +30,26 @@ const { siteName, city, niche, phone, whatsapp } = settings;
 const phoneUrl = generateTelUrl(phone);
 const whatsappUrl = generateWhatsAppUrl(whatsapp || phone);
 
-// Agrupar por tipo
-const residenciales = locations.filter(
-  (loc) => loc.data.type === "residencial",
+// Agrupar por Barcelona vs Otras Ciudades
+const barcelonasDistrictsSlugs = [
+  "ciutat-vella",
+  "eixample",
+  "gracia",
+  "horta-guinardo",
+  "les-corts",
+  "nou-barris",
+  "sant-andreu",
+  "sant-marti",
+  "sants-montjuic",
+  "sarria-sant-gervasi",
+];
+
+const distritosBcn = locations.filter((loc) =>
+  barcelonasDistrictsSlugs.includes(loc.slug),
 );
-const industriales = locations.filter((loc) => loc.data.type === "industrial");
-const centros = locations.filter((loc) => loc.data.type === "centro");
+const ciudades = locations.filter(
+  (loc) => !barcelonasDistrictsSlugs.includes(loc.slug),
+);
 
 const collectionSchema: WithContext<CollectionPage> = {
   "@context": "https://schema.org",
@@ -176,126 +190,9 @@ const finalSchema = [collectionSchema, ...servicesSchema] as any;
         </p>
       </div>
 
-      {/* Zonas Residenciales */}
+      {/* Distritos de Barcelona */}
       {
-        residenciales.length > 0 && (
-          <div class="group/section">
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 border-b border-white/5 pb-8">
-              <div>
-                <div class="flex items-center gap-3 mb-4 text-primary">
-                  <span class="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                    <Home className="w-5 h-5" />
-                  </span>
-                  <span class="text-sm font-bold tracking-[0.2em] uppercase text-text/70">
-                    Áreas del Hogar
-                  </span>
-                </div>
-                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
-                  Zonas Residenciales
-                </h3>
-              </div>
-              <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
-                Despliegue rápido en barrios residenciales y comunidades de
-                vecinos. Minimizamos las molestias y garantizamos discreción.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {residenciales.map((location) => (
-                <a
-                  href={`/zona/${location.slug}/`}
-                  class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white/5 border border-white/10 p-8 transition-all duration-300 hover:bg-white/10 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
-                >
-                  <div>
-                    <div class="flex justify-between items-start mb-6">
-                      <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
-                        <MapPin className="w-5 h-5 text-text/50 group-hover:text-primary transition-colors" />
-                      </div>
-                      <ArrowRight className="w-6 h-6 text-text/50 group-hover:text-primary transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300" />
-                    </div>
-                    <h3 class="text-2xl font-bold text-heading mb-2 group-hover:text-primary transition-colors">
-                      {location.data.name}
-                    </h3>
-                    <p class="text-text/60 text-sm line-clamp-2 mb-6">
-                      {location.data.seoDesc ||
-                        `Servicio urgente en ${location.data.name}.`}
-                    </p>
-                  </div>
-                  <div class="border-t border-white/5 pt-4">
-                    <div class="flex items-center gap-2 text-xs text-text/50">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-                      <span>Servicio activo hoy</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        )
-      }
-
-      {/* Zonas Industriales */}
-      {
-        industriales.length > 0 && (
-          <div class="group/section">
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 border-b border-white/5 pb-8">
-              <div>
-                <div class="flex items-center gap-3 mb-4 text-primary">
-                  <span class="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                    <Factory className="w-5 h-5" />
-                  </span>
-                  <span class="text-sm font-bold tracking-[0.2em] uppercase text-text/70">
-                    Polígonos y Naves
-                  </span>
-                </div>
-                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
-                  Zonas Industriales
-                </h3>
-              </div>
-              <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
-                Equipos preparados para intervenciones en grandes instalaciones,
-                con protocolos de seguridad industrial y maquinaria
-                especializada.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {industriales.map((location) => (
-                <a
-                  href={`/zona/${location.slug}/`}
-                  class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white/5 border border-white/10 p-8 transition-all duration-300 hover:bg-white/10 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
-                >
-                  <div>
-                    <div class="flex justify-between items-start mb-6">
-                      <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
-                        <Factory className="w-5 h-5 text-text/50 group-hover:text-primary transition-colors" />
-                      </div>
-                      <ArrowRight className="w-6 h-6 text-text/50 group-hover:text-primary transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300" />
-                    </div>
-                    <h3 class="text-2xl font-bold text-heading mb-2 group-hover:text-primary transition-colors">
-                      {location.data.name}
-                    </h3>
-                    <p class="text-text/60 text-sm line-clamp-2 mb-6">
-                      {location.data.seoDesc ||
-                        `Soluciones industriales en ${location.data.name}.`}
-                    </p>
-                  </div>
-                  <div class="border-t border-white/5 pt-4">
-                    <div class="flex items-center gap-2 text-xs text-text/50">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-                      <span>Atención Business 24/7</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        )
-      }
-
-      {/* Centros Urbanos */}
-      {
-        centros.length > 0 && (
+        distritosBcn.length > 0 && (
           <div class="group/section">
             <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 border-b border-white/5 pb-8">
               <div>
@@ -308,17 +205,18 @@ const finalSchema = [collectionSchema, ...servicesSchema] as any;
                   </span>
                 </div>
                 <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
-                  Centro y Distritos
+                  Distritos de Barcelona
                 </h3>
               </div>
               <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
-                Logística adaptada al centro de la ciudad. Vehículos compactos
-                para acceso a zonas peatonales y cascos antiguos.
+                Despliegue rápido en todos los barrios de Barcelona ciudad.
+                Adaptados a la normativa municipal, accesos a zonas peatonales y
+                cascos antiguos.
               </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {centros.map((location) => (
+              {distritosBcn.map((location) => (
                 <a
                   href={`/zona/${location.slug}/`}
                   class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white/5 border border-white/10 p-8 transition-all duration-300 hover:bg-white/10 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
@@ -335,13 +233,71 @@ const finalSchema = [collectionSchema, ...servicesSchema] as any;
                     </h3>
                     <p class="text-text/60 text-sm line-clamp-2 mb-6">
                       {location.data.seoDesc ||
-                        `Servicio rápido en ${location.data.name}.`}
+                        `Servicio rápido y garantizado en ${location.data.name}.`}
                     </p>
                   </div>
                   <div class="border-t border-white/5 pt-4">
                     <div class="flex items-center gap-2 text-xs text-text/50">
                       <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-                      <span>Acceso Zona SER/APR</span>
+                      <span>Distrito de Barcelona capital</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {/* Ciudades y Municipios */}
+      {
+        ciudades.length > 0 && (
+          <div class="group/section">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 border-b border-white/5 pb-8">
+              <div>
+                <div class="flex items-center gap-3 mb-4 text-primary">
+                  <span class="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                    <Home className="w-5 h-5" />
+                  </span>
+                  <span class="text-sm font-bold tracking-[0.2em] uppercase text-text/70">
+                    Área Metropolitana
+                  </span>
+                </div>
+                <h3 class="text-4xl md:text-5xl font-bold text-heading tracking-tight">
+                  Ciudades y Municipios
+                </h3>
+              </div>
+              <p class="text-text/70 text-base md:text-lg max-w-xl leading-relaxed lg:text-right text-pretty">
+                Servicio a domicilio sin coste por desplazamiento en las
+                principales poblaciones limítrofes y la zona metropolitana.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {ciudades.map((location) => (
+                <a
+                  href={`/zona/${location.slug}/`}
+                  class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white/5 border border-white/10 p-8 transition-all duration-300 hover:bg-white/10 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
+                >
+                  <div>
+                    <div class="flex justify-between items-start mb-6">
+                      <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/30 transition-colors">
+                        <MapPin className="w-5 h-5 text-text/50 group-hover:text-primary transition-colors" />
+                      </div>
+                      <ArrowRight className="w-6 h-6 text-text/50 group-hover:text-primary transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300" />
+                    </div>
+                    <h3 class="text-2xl font-bold text-heading mb-2 group-hover:text-primary transition-colors">
+                      {location.data.name}
+                    </h3>
+                    <p class="text-text/60 text-sm line-clamp-2 mb-6">
+                      {location.data.seoDesc ||
+                        `Servicio experto de alisado en ${location.data.name}.`}
+                    </p>
+                  </div>
+                  <div class="border-t border-white/5 pt-4">
+                    <div class="flex items-center gap-2 text-xs text-text/50">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                      <span>Área metropolitana y alrededores</span>
                     </div>
                   </div>
                 </a>
