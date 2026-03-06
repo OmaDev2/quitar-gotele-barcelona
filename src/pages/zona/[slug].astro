@@ -54,6 +54,7 @@ import {
   generateBreadcrumbsList,
   generateFAQSchema,
   generateServicesSchema,
+  generateHowToSchema,
 } from "@/lib/seo";
 
 // Recopilar testimonios (idealmente filtraríamos por zona si tuviéramos esa data,
@@ -101,6 +102,67 @@ const breadcrumbsPoints = [
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 const faqSchema = generateFAQSchema(data.faq || []);
 
+// HowTo Schema: Usar bloque si existe, si no, proceso estándar localizado
+const processBlock = (data.blocks as any[])?.find(
+  (b: any) => b.discriminant === "process",
+)?.value;
+const howToSchema = processBlock
+  ? generateHowToSchema(
+      processBlock.title || `Cómo quitamos el gotelé en ${data.name}`,
+      processBlock.subtitle ||
+        `Nuestro proceso profesional de alisado en ${data.name}`,
+      processBlock.steps?.map((s: any) => ({
+        title: s.title,
+        text: s.description,
+      })) || [],
+    )
+  : generateHowToSchema(
+      `Cómo quitar gotelé en ${data.name} (Paso a Paso)`,
+      `Conoce el método profesional que usamos en ${data.name} para dejar tus paredes totalmente lisas con mínimo polvo.`,
+      [
+        {
+          title: "1. Visita y Medición",
+          text: `Analizamos el estado de tus paredes en ${data.name} y te damos presupuesto cerrado.`,
+        },
+        {
+          title: "2. Protección Total",
+          text: "Cubrimos suelos, muebles y carpintería para evitar desperfectos.",
+        },
+        {
+          title: "3. Lijado con Aspiración",
+          text: "Eliminamos el gotelé con máquinas conectadas a aspiradores industriales HEPA.",
+        },
+        {
+          title: "4. Aplicación de Fijador",
+          text: "Usamos puentes de unión Sika Top para garantizar la adherencia.",
+        },
+        {
+          title: "5. Capas de Masilla",
+          text: "Aplicamos capas de masilla específica para cubrir el poro y nivelar.",
+        },
+        {
+          title: "6. Enlucido Q4",
+          text: "Conseguimos el máximo nivel de planimetría mediante enlucido fino manual.",
+        },
+        {
+          title: "7. Lijado de Acabado",
+          text: "Lijado de grano fino para una suavidad al tacto excepcional.",
+        },
+        {
+          title: "8. Imprimación y Pintura",
+          text: "Sellamos la pared y aplicamos pintura plástica de alta calidad.",
+        },
+        {
+          title: "9. Limpieza Profunda",
+          text: "Retiramos protecciones y escombros. Dejamos el piso impecable.",
+        },
+        {
+          title: "10. Entrega y Garantía",
+          text: "Revisamos el resultado contigo y te entregamos la garantía por escrito.",
+        },
+      ],
+    );
+
 const servicesListForSchema =
   settings.knowsAbout?.length > 0
     ? settings.knowsAbout
@@ -122,6 +184,7 @@ const finalSchema = [
   breadcrumbsSchema,
   ...servicesSchema,
   ...(faqSchema ? [faqSchema] : []),
+  ...(howToSchema ? [howToSchema] : []),
 ];
 
 // 7. SEO: Título y descripción

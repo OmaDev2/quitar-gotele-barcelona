@@ -28,7 +28,25 @@ const {
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
 
 // Derivar imagen de OG dinámica basada en el nicho si no hay imagen específica
-const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g, "-") || "default"}.png`;
+// Se normaliza el nicho (quitando acentos como la 'é' de gotelé) para evitar errores 404
+const normalizedNiche =
+  settings.niche
+    ?.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "-") || "default";
+
+const absoluteDefaultOgImage = new URL(
+  `/images/og-${normalizedNiche}.png`,
+  Astro.site,
+).href;
+
+// Asegurar que 'image' sea una URL absoluta si se proporciona, sino usar la por defecto
+const ogImage = image
+  ? image.startsWith("http")
+    ? image
+    : new URL(image, Astro.site).href
+  : absoluteDefaultOgImage;
 ---
 
 <SEO
@@ -39,7 +57,7 @@ const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g
     basic: {
       title,
       type: "website",
-      image: image || defaultOgImage,
+      image: ogImage,
       url: canonicalURL,
     },
     optional: {
@@ -52,7 +70,7 @@ const defaultOgImage = `/images/og-${settings.niche?.toLowerCase().replace(/\s/g
     card: "summary_large_image",
     title: title,
     description: description,
-    image: image || defaultOgImage,
+    image: ogImage,
   }}
   noindex={noindex}
   nofollow={noindex}

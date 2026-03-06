@@ -51,26 +51,59 @@ export default defineConfig({
         !page.includes('/admin') &&
         !page.includes('/gracias') &&
         !page.includes('/404'),
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date(),
       serialize(item) {
-        // Prioridad alta para home y páginas principales
-        if (item.url === '/' || item.url.endsWith('/')) {
-          if (item.url === '/' || item.url === siteUrl + '/') {
-            item.priority = 1.0;
-            item.changefreq = 'daily';
-          } else if (item.url.includes('/zona/') || item.url.includes('/servicios/')) {
-            item.priority = 0.8;
-            item.changefreq = 'weekly';
-          } else if (item.url.includes('/contacto') || item.url.includes('/nosotros')) {
-            item.priority = 0.6;
-            item.changefreq = 'monthly';
-          } else if (item.url.includes('/blog')) {
-            item.priority = 0.7;
-            item.changefreq = 'weekly';
+        // --- LÓGICA DE LASTMOD DINÁMICO ---
+        try {
+          let filePath = '';
+          const url = new URL(item.url);
+          const pathname = url.pathname.replace(/\/$/, ''); // Quitar barra final para comparar
+
+          if (pathname === '' || pathname === '/') {
+             // Home: Usamos el MDX de home como referencia de cambio principal
+             filePath = './src/content/pages/home.mdx';
+          } else if (pathname.startsWith('/zona/')) {
+             // Zonas dinámicas: /zona/nombre-zona -> src/content/locations/nombre-zona.mdx
+             const slug = pathname.replace('/zona/', '');
+             filePath = `./src/content/locations/${slug}.mdx`;
+          } else if (pathname.startsWith('/blog/')) {
+             // Blog dinámico: /blog/slug -> src/content/blog/slug.md
+             const slug = pathname.replace('/blog/', '');
+             filePath = `./src/content/blog/${slug}.md`;
+          } else if (pathname === '/nosotros') {
+             filePath = './src/pages/nosotros.astro';
+          } else if (pathname === '/contacto') {
+             filePath = './src/pages/contacto.astro';
+          } else if (pathname === '/proyectos') {
+             filePath = './src/pages/proyectos.astro';
+          } else if (pathname === '/zonas') {
+             filePath = './src/pages/zonas.astro';
+          } else if (pathname === '/blog') {
+             filePath = './src/pages/blog/index.astro';
           }
+
+          if (filePath && fs.existsSync(filePath)) {
+            const stats = fs.statSync(filePath);
+            item.lastmod = stats.mtime.toISOString();
+          } else {
+            // Fallback si no encontramos el archivo exacto (ej. páginas estáticas sin mapeo)
+            item.lastmod = new Date().toISOString();
+          }
+        } catch (e) {
+          item.lastmod = new Date().toISOString();
         }
+
+        // Prioridad y frecuencia
+        if (item.url === siteUrl + '/') {
+          item.priority = 1.0;
+          item.changefreq = 'daily';
+        } else if (item.url.includes('/zona/')) {
+          item.priority = 0.8;
+          item.changefreq = 'weekly';
+        } else {
+          item.priority = 0.6;
+          item.changefreq = 'monthly';
+        }
+
         return item;
       }
     }),

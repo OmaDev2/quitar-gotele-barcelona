@@ -1,84 +1,121 @@
 ---
+import { Image } from "astro:assets";
+
 interface Props {
-    title?: string;
-    subtitle?: string;
-    beforeImage: string;
-    afterImage: string;
-    beforeLabel?: string;
-    afterLabel?: string;
-    bgClass?: string;
+  title?: string;
+  subtitle?: string;
+  beforeImage: string;
+  afterImage: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  bgClass?: string;
 }
 
 const {
-    title = "Resultados Reales",
-    subtitle = "La calidad que nos diferencia en cada proyecto.",
-    beforeImage,
-    afterImage,
-    beforeLabel = "Antes",
-    afterLabel = "Después",
-    bgClass = "bg-surface",
+  title = "Resultados Reales",
+  subtitle = "La calidad que nos diferencia en cada proyecto.",
+  beforeImage,
+  afterImage,
+  beforeLabel = "Antes",
+  afterLabel = "Después",
+  bgClass = "bg-surface",
 } = Astro.props;
+
+// Default fallbacks
+const defaultBefore =
+  "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?q=60&w=1000&auto=format&fit=crop";
+const defaultAfter =
+  "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=60&w=1000&auto=format&fit=crop";
 ---
 
 <section class={`py-24 ${bgClass}`}>
-    <div class="container mx-auto px-4">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <h2 class="text-4xl font-heading font-bold text-heading mb-6">
-                {title}
-            </h2>
-            <p class="text-xl text-body font-light">
-                {subtitle}
-            </p>
-        </div>
-
-        <div class="max-w-5xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-4 relative">
-                {/* BEFORE */}
-                <div
-                    class="relative group overflow-hidden rounded-3xl aspect-[4/3] shadow-xl"
-                >
-                    <img
-                        src={beforeImage ||
-                            "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?q=60&w=1000&auto=format&fit=crop"}
-                        alt="Antes del servicio"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        width="800"
-                        height="600"
-                    />
-                    <div
-                        class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"
-                    >
-                    </div>
-                    <div
-                        class="absolute bottom-6 left-6 bg-secondary/80 backdrop-blur-md text-heading text-xs font-bold px-4 py-2 rounded-lg uppercase tracking-widest"
-                    >
-                        {beforeLabel}
-                    </div>
-                </div>
-
-                {/* AFTER */}
-                <div
-                    class="relative group overflow-hidden rounded-3xl aspect-[4/3] shadow-2xl ring-4 ring-primary/20"
-                >
-                    <img
-                        src={afterImage ||
-                            "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=60&w=1000&auto=format&fit=crop"}
-                        alt="Después del servicio"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        width="800"
-                        height="600"
-                    />
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                    </div>
-                    <div
-                        class="absolute bottom-6 right-6 bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg uppercase tracking-widest shadow-lg"
-                    >
-                        {afterLabel}
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-4xl font-heading font-bold text-heading mb-6">
+        {title}
+      </h2>
+      <p class="text-xl text-body font-light">
+        {subtitle}
+      </p>
     </div>
+
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-4 relative">
+        {/* BEFORE */}
+        <div
+          class="relative group overflow-hidden rounded-3xl aspect-[4/3] shadow-xl"
+        >
+          <Image
+            src={beforeImage || defaultBefore}
+            alt="Antes del servicio"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            width={800}
+            height={600}
+            format="webp"
+            quality={80}
+          />
+          <div
+            class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"
+          >
+          </div>
+          <div
+            class="absolute bottom-6 left-6 bg-secondary/80 backdrop-blur-md text-heading text-xs font-bold px-4 py-2 rounded-lg uppercase tracking-widest"
+          >
+            {beforeLabel}
+          </div>
+        </div>
+
+        {/* AFTER */}
+        <div
+          class="relative group overflow-hidden rounded-3xl aspect-[4/3] shadow-2xl ring-4 ring-primary/20"
+        >
+          <Image
+            src={afterImage || defaultAfter}
+            alt="Después del servicio"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            width={800}
+            height={600}
+            format="webp"
+            quality={80}
+          />
+          <div
+            class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"
+          >
+          </div>
+          <div
+            class="absolute bottom-6 left-6 bg-secondary/80 backdrop-blur-md text-heading text-xs font-bold px-4 py-2 rounded-lg uppercase tracking-widest"
+          >
+            {beforeLabel}
+          </div>
+        </div>
+
+        {/* AFTER */}
+        <div
+          class="relative group overflow-hidden rounded-3xl aspect-[4/3] shadow-2xl ring-4 ring-primary/20"
+        >
+          <img
+            src={afterImage ||
+              "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=60&w=1000&auto=format&fit=crop"}
+            alt="Después del servicio"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            width="800"
+            height="600"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+          </div>
+          <div
+            class="absolute bottom-6 right-6 bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg uppercase tracking-widest shadow-lg"
+          >
+            {afterLabel}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

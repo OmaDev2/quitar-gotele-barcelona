@@ -99,22 +99,44 @@ interface LocalBusinessSettings {
  * Helper para formatear areaServed correctamente (City list o GeoCircle)
  */
 export function formatAreaServed(areaData: any, radius?: number, coordinates?: { lat?: string; lng?: string }) {
+    // Wikidata ID Mapping for core cities
+    const cityMap: Record<string, string> = {
+        "Barcelona": "https://www.wikidata.org/wiki/Q1492",
+        "Badalona": "https://www.wikidata.org/wiki/Q15462",
+        "Hospitalet de Llobregat": "https://www.wikidata.org/wiki/Q15470",
+        "L'Hospitalet de Llobregat": "https://www.wikidata.org/wiki/Q15470",
+        "Hospitalet del Llobregat": "https://www.wikidata.org/wiki/Q15470", // Handle typos
+        "Sabadell": "https://www.wikidata.org/wiki/Q12258",
+        "Terrassa": "https://www.wikidata.org/wiki/Q13939",
+        "Mataró": "https://www.wikidata.org/wiki/Q13727"
+    };
+
+    const mapItem = (item: any) => {
+        if (typeof item === 'string') {
+            const wikidataId = cityMap[item];
+            return {
+                "@type": "City",
+                name: item,
+                ...(wikidataId ? { "@id": wikidataId } : {})
+            };
+        }
+        return item;
+    };
+
     // Opción A: Si hay una lista explícita, priorizarla (Mejor SEO semántico)
     if (areaData && Array.isArray(areaData) && areaData.length > 0) {
-        return areaData.map(item => {
-            if (typeof item === 'string') {
-                return {
-                    "@type": "AdministrativeArea",
-                    name: item
-                };
-            }
-            return item;
-        }) as any;
+        return areaData.map(mapItem);
     }
 
-    // Opción B: Si hay un radio definido y coordenadas, usar GeoCircle (Automatización)
+    // Opción B: Si es un string individual
+    if (typeof areaData === 'string' && areaData.length > 0) {
+        return mapItem(areaData);
+    }
+
+    // Opción C: Si hay un radio definido y coordenadas, usar GeoCircle (Automatización)
     if (radius && radius > 0 && coordinates?.lat && coordinates?.lng) {
         return {
+            "@id": coordinates?.lat + coordinates?.lng,
             "@type": "GeoCircle",
             "geoMidpoint": {
                 "@type": "GeoCoordinates",
@@ -125,7 +147,7 @@ export function formatAreaServed(areaData: any, radius?: number, coordinates?: {
         };
     }
 
-    // Opción C: Si es un objeto individual (fallback)
+    // Opción D: Fallback
     return areaData;
 }
 
@@ -296,10 +318,12 @@ export function generateLocalBusinessSchema(
  */
 export function generateServicesSchema(
     services: { name: string; description?: string; price?: string; unit?: string }[],
-    city: string = "Barcelona",
+    areaServed: any = "Barcelona",
     siteUrl: string = "https://quitargotelebarcelona.es"
 ): WithContext<any>[] {
     if (!services || services.length === 0) return [];
+
+    const formattedArea = formatAreaServed(areaServed);
 
     return services.map(service => ({
         "@context": "https://schema.org",
@@ -309,10 +333,7 @@ export function generateServicesSchema(
         "provider": { 
             "@id": `${siteUrl}/#business` 
         },
-        "areaServed": {
-            "@type": "City",
-            "name": city
-        },
+        "areaServed": formattedArea,
         ...(service.price ? {
             "offers": {
                 "@type": "Offer",
@@ -325,4 +346,38 @@ export function generateServicesSchema(
             }
         } : {})
     }));
+}
+
+/**
+ * Genera el esquema HowTo para procesos paso a paso
+ */
+export function generateHowToSchema(
+    name: string,
+    description: string,
+    steps: { title: string; text: string }[]
+): WithContext<any> | null {
+    if (!steps || steps.length === 0) return null;
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": name,
+        "description": description,
+        "step": steps.map((step, index) => {
+            const htmlText = step.text
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                .replace(/\n/g, "<br>");
+
+            return {
+                "@type": "HowToStep",
+                "position": index + 1,
+                "name": step.title,
+                "itemListElement": [{
+                    "@type": "HowToDirection",
+                    "text": htmlText
+                }]
+            };
+        }),
+        "totalTime": "P2D" // Estimación general: 2 días
+    };
 }

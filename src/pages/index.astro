@@ -73,6 +73,7 @@ import {
   generateFAQSchema,
   generateBreadcrumbsList,
   generateServicesSchema,
+  generateHowToSchema,
 } from "@/lib/seo";
 
 const localBusinessSchema = generateLocalBusinessSchema(
@@ -112,6 +113,22 @@ const homepageFaqs =
     ?.questions ||
   [];
 const faqSchema = generateFAQSchema(homepageFaqs);
+
+// HowTo Schema - Extraer del bloque de proceso si existe
+const processBlock = homeData.blocks?.find(
+  (b: any) => b.discriminant === "process",
+)?.value;
+const howToSchema = processBlock
+  ? generateHowToSchema(
+      processBlock.title || "Cómo quitamos el gotelé",
+      processBlock.subtitle || "Proceso paso a paso para un alisado perfecto",
+      processBlock.steps?.map((s: any) => ({
+        title: s.title,
+        text: s.description,
+      })) || [],
+    )
+  : null;
+
 const breadcrumbsPoints = [{ name: "Inicio", item: Astro.url.href }];
 const breadcrumbsSchema = generateBreadcrumbsList(breadcrumbsPoints);
 
@@ -136,6 +153,7 @@ const schema = [
   breadcrumbsSchema,
   ...servicesSchema,
   ...(faqSchema ? [faqSchema] : []),
+  ...(howToSchema ? [howToSchema] : []),
 ] as any;
 ---
 
