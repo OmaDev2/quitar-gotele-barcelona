@@ -40,5 +40,6 @@ export default {
 	},
 	plugins: [
 		require('@tailwindcss/typography'),
+		// tailwindcss-animate eliminado: no se usa en ningún componente
 	],
 }
